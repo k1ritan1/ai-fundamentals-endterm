@@ -35,6 +35,10 @@ TOPBAR_HTML = """
     <span class="telemetry-tag" style="color: var(--status-nominal-bright);">INTEGRITY: 88.4%</span>
   </div>
   <div class="topbar-actions">
+    <button id="panel-toggle-btn" class="btn-secondary" aria-label="Toggle navigation panel (Hotkey: [ )" title="Toggle navigation panel (Hotkey: [ )">
+      <span id="panel-toggle-icon">&#x25F0;</span>
+      <span id="panel-toggle-text">Panels: ON</span>
+    </button>
     <button id="audio-toggle-btn" class="btn-secondary" aria-label="Toggle avionics sound effects">
       <span id="audio-icon">&#128263;</span>
       <span>SFX: OFF</span>
@@ -221,6 +225,12 @@ HTML_TEMPLATE = f"""<!DOCTYPE html>
       {BACKMATTER_HTML}
     </main>
   </div>
+
+  <button id="panel-restore-btn" class="panel-restore-pill" aria-label="Restore navigation panel" title="Restore navigation panel (Hotkey: [ )">
+    <span class="pill-icon">&#x25F0;</span>
+    <span>RESTORE PANELS</span>
+    <span class="pill-hotkey">[</span>
+  </button>
 
   <script src="js/simulations.js"></script>
 </body>

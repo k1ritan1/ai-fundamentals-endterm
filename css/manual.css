@@ -287,6 +287,7 @@ body::after {
   padding: 1.25rem 0.85rem 3rem;
   z-index: 90;
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 [data-theme="light"] .sidebar {
@@ -465,6 +466,64 @@ body::after {
   margin-left: var(--sidebar-width);
   padding: 2.5rem 3.5rem 6rem;
   max-width: calc(var(--content-max-width) + var(--sidebar-width));
+  transition: margin-left 0.25s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.25s ease, padding 0.25s ease;
+}
+
+/* Panel Collapse / Focus Mode */
+body.panels-hidden .sidebar {
+  transform: translateX(-100%);
+  pointer-events: none;
+  box-shadow: none;
+}
+
+body.panels-hidden .main-content {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1040px;
+  width: 100%;
+  padding: 2.5rem 2.5rem 6rem;
+}
+
+/* Floating Restore Button when Panels are Hidden */
+.panel-restore-pill {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 150;
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--bg-surface-elevated);
+  border: 1px solid var(--accent-amber);
+  color: var(--accent-amber-bright);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.45rem 0.85rem;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 10px rgba(217, 119, 6, 0.15);
+  transition: all 0.2s ease;
+}
+
+.panel-restore-pill:hover {
+  background-color: var(--accent-amber);
+  color: #0b0f14;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 14px rgba(217, 119, 6, 0.35);
+}
+
+.panel-restore-pill .pill-hotkey {
+  font-size: 0.65rem;
+  opacity: 0.85;
+  padding: 0.1rem 0.35rem;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  border: 1px solid rgba(217, 119, 6, 0.35);
+}
+
+body.panels-hidden .panel-restore-pill {
+  display: inline-flex;
 }
 
 @media (max-width: 1024px) {

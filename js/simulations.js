@@ -2193,6 +2193,80 @@ window.copyCode = function(btn) {
   });
 };
 
+// Navigation Panels Toggle (Focus Mode)
+function initPanelToggle() {
+  const panelToggleBtn = document.getElementById('panel-toggle-btn');
+  const panelRestoreBtn = document.getElementById('panel-restore-btn');
+  const panelToggleText = document.getElementById('panel-toggle-text');
+  const panelToggleIcon = document.getElementById('panel-toggle-icon');
+
+  function updatePanelUI(isHidden) {
+    if (panelToggleText) {
+      panelToggleText.textContent = isHidden ? 'Panels: OFF' : 'Panels: ON';
+    }
+    if (panelToggleIcon) {
+      panelToggleIcon.innerHTML = isHidden ? '&#x25F1;' : '&#x25F0;';
+    }
+    if (panelToggleBtn) {
+      if (isHidden) {
+        panelToggleBtn.classList.add('active');
+        panelToggleBtn.setAttribute('title', 'Restore navigation panel (Hotkey: [ )');
+        panelToggleBtn.setAttribute('aria-label', 'Restore navigation panel (Hotkey: [ )');
+      } else {
+        panelToggleBtn.classList.remove('active');
+        panelToggleBtn.setAttribute('title', 'Hide navigation panel (Hotkey: [ )');
+        panelToggleBtn.setAttribute('aria-label', 'Hide navigation panel (Hotkey: [ )');
+      }
+    }
+  }
+
+  function setPanelsHidden(hidden) {
+    if (hidden) {
+      document.body.classList.add('panels-hidden');
+      localStorage.setItem('daedalus_panels_hidden', 'true');
+    } else {
+      document.body.classList.remove('panels-hidden');
+      localStorage.setItem('daedalus_panels_hidden', 'false');
+    }
+    updatePanelUI(hidden);
+    if (typeof playAvionicsChirp === 'function') {
+      playAvionicsChirp(hidden ? 750 : 1050, 'sine', 0.05);
+    }
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 260);
+  }
+
+  function togglePanels() {
+    const isHidden = document.body.classList.contains('panels-hidden');
+    setPanelsHidden(!isHidden);
+  }
+
+  // Restore saved preference
+  const savedPreference = localStorage.getItem('daedalus_panels_hidden') === 'true';
+  if (savedPreference) {
+    setPanelsHidden(true);
+  } else {
+    updatePanelUI(false);
+  }
+
+  if (panelToggleBtn) {
+    panelToggleBtn.addEventListener('click', togglePanels);
+  }
+  if (panelRestoreBtn) {
+    panelRestoreBtn.addEventListener('click', () => setPanelsHidden(false));
+  }
+
+  // Keyboard shortcut listener: '[' or 'Alt+P' or 'Ctrl+B'
+  window.addEventListener('keydown', (e) => {
+    if (e.target && ['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+    if (e.key === '[' || (e.altKey && (e.key === 'p' || e.key === 'P')) || ((e.ctrlKey || e.metaKey) && (e.key === 'b' || e.key === 'B'))) {
+      e.preventDefault();
+      togglePanels();
+    }
+  });
+}
+
 // Reset Code Scroll Helper to prevent sliced pseudocode
 function resetCodeScroll() {
   document.querySelectorAll('.code-container, .code-container pre, pre').forEach(el => {
@@ -2207,6 +2281,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSearchPalette();
   initMissionClock();
   initAvionicsAudio();
+  initPanelToggle();
   initFullscreen();
   resetCodeScroll();
 
