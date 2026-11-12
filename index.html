@@ -1,0 +1,3030 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" class="dark-hud">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USSC Daedalus: Autonomous Subsystem Emergency Reboot Manual (AIF1303)</title>
+  <meta name="description" content="AI Fundamentals EndTerm Capstone Manual. Complete engineering guide covering PEAS, search, CSPs, minimax, MDPs, Q-learning, Bayesian networks, HMMs, classification, neural nets, and AI safety.">
+  <link rel="stylesheet" href="css/manual.css">
+  
+  
+  <script>
+    window.retriggerMathRendering = function() {
+      if (typeof renderMathInElement === 'function' && typeof katex !== 'undefined') {
+        try {
+          const opts = {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: String.fromCharCode(92) + '[', right: String.fromCharCode(92) + ']', display: true},
+              {left: '$', right: '$', display: false},
+              {left: String.fromCharCode(92) + '(', right: String.fromCharCode(92) + ')', display: false}
+            ],
+            ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            throwOnError: false
+          };
+          renderMathInElement(document.body, opts);
+          // Explicitly scan all tables, table cells, headers, and badges
+          document.querySelectorAll('table, th, td, .specs-table th, .specs-table td, .diagram-header span, .diagram-caption, .formula-label, .definition-box').forEach(function(el) {
+            renderMathInElement(el, opts);
+          });
+        } catch (e) {
+          console.warn('Math typesetting caught error:', e);
+        }
+      }
+    };
+  </script>
+
+
+  <!-- KaTeX for crisp mathematical typography (local offline with fallback) -->
+  <link rel="stylesheet" href="vendor/katex/katex.min.css">
+  <script defer src="vendor/katex/katex.min.js"></script>
+  <script defer src="vendor/katex/auto-render.min.js"
+    onload="window.retriggerMathRendering && window.retriggerMathRendering();"></script>
+</head>
+<body>
+  
+<header class="topbar">
+  <div style="display: flex; align-items: center; gap: 0.75rem;">
+    <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">&#9776;</button>
+    <a href="#overview" class="topbar-brand">
+      <span class="status-beacon"></span>
+      <span style="color: var(--accent-amber-bright);">USSC DAEDALUS</span>
+      <span style="color: var(--text-muted);">//</span>
+      <span>EMERGENCY MANUAL</span>
+    </a>
+  </div>
+  <div class="topbar-telemetry-strip">
+    <span class="telemetry-tag">STAGE 4 // DECK REBOOT</span>
+    <span id="live-met-clock" class="telemetry-tag">MET: +142d 08:34:12</span>
+    <span class="telemetry-tag" style="color: var(--status-nominal-bright);">INTEGRITY: 88.4%</span>
+  </div>
+  <div class="topbar-actions">
+    <button id="audio-toggle-btn" class="btn-secondary" aria-label="Toggle avionics sound effects">
+      <span id="audio-icon">&#128263;</span>
+      <span>SFX: OFF</span>
+    </button>
+    <button id="search-palette-btn" class="btn-secondary" aria-label="Open search index command palette">
+      <span style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--accent-amber-bright); font-weight: bold;">&#8984;K</span>
+      <span>Search</span>
+    </button>
+    <button id="theme-toggle" class="btn-secondary" aria-label="Toggle Dark and Light theme">Theme: Dark HUD</button>
+    <button id="fullscreen-btn" class="btn-secondary" aria-label="Toggle Fullscreen">&#x26F6; Fullscreen</button>
+    <a href="presentation.html" class="btn-secondary" target="_blank" rel="noopener">Defense Deck</a>
+    <a href="#submission-declaration" class="btn-primary">AI Declaration</a>
+  </div>
+</header>
+
+  
+<div id="search-modal-backdrop" class="search-modal-backdrop" role="dialog" aria-modal="true" aria-label="Command search palette">
+  <div class="search-modal">
+    <div class="search-input-wrapper">
+      <span style="font-family: var(--font-mono); color: var(--accent-amber-bright); margin-right: 0.6rem; font-weight: bold;">&gt;</span>
+      <input type="text" id="search-palette-input" class="search-input" placeholder="Search chapters, algorithms, formulas, hardware specs (e.g. A*, AC-3, HMM, Bellman, FP16)..." aria-label="Search manual documentation">
+      <button id="search-close-btn" class="btn-secondary" style="padding: 0.2rem 0.5rem;" aria-label="Close search modal">ESC</button>
+    </div>
+    <ul id="search-results-list" class="search-results-list" role="listbox">
+      <!-- Populated dynamically via JS search index -->
+    </ul>
+  </div>
+</div>
+
+
+  <div class="app-container">
+    
+<nav class="sidebar" id="sidebar" aria-label="Manual Table of Contents">
+  <div class="sidebar-progress-card">
+    <div class="progress-header">
+      <span>REBOOT SEQUENCE</span>
+      <span style="color: var(--status-nominal-bright); font-weight: bold;">7/7 COMPLETE</span>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill"></div>
+    </div>
+    <div class="sidebar-telemetry-grid">
+      <div class="telemetry-cell">
+        <span class="cell-label">CORE TEMP</span>
+        <span class="cell-val">840 K</span>
+      </div>
+      <div class="telemetry-cell">
+        <span class="cell-label">SRAM USAGE</span>
+        <span class="cell-val">48 / 512 KB</span>
+      </div>
+      <div class="telemetry-cell">
+        <span class="cell-label">BUS LATENCY</span>
+        <span class="cell-val">2.4 ms</span>
+      </div>
+      <div class="telemetry-cell">
+        <span class="cell-label">LINK</span>
+        <span class="cell-val" style="color: var(--status-nominal-bright);">CAN-2.0B</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-group-title">Command Overview</div>
+  <a href="#overview" class="nav-link active">
+    <span class="nav-chapter-num">0.0</span>
+    <span>Operational Briefing</span>
+  </a>
+
+  <div class="nav-group-title">Module 1: Navigation &amp; Hull Clearance</div>
+  <a href="#chapter-1" class="nav-link">
+    <span class="nav-chapter-num">CH 1</span>
+    <span>Sensory Array &amp; Space Mapping</span>
+    <span class="nav-status-pill">[ONLINE]</span>
+  </a>
+  <a href="#chapter-2" class="nav-link">
+    <span class="nav-chapter-num">CH 2</span>
+    <span>Breach Avoidance Routing</span>
+    <span class="nav-status-pill">[ONLINE]</span>
+  </a>
+
+  <div class="nav-group-title">Module 2: Power &amp; Subsystem Defense</div>
+  <a href="#chapter-3" class="nav-link">
+    <span class="nav-chapter-num">CH 3</span>
+    <span>Power Grid Allocation CSP</span>
+    <span class="nav-status-pill">[ONLINE]</span>
+  </a>
+  <a href="#chapter-4" class="nav-link">
+    <span class="nav-chapter-num">CH 4</span>
+    <span>Subsystem Defense Protocols</span>
+    <span class="nav-status-pill">[ONLINE]</span>
+  </a>
+
+  <div class="nav-group-title">Module 3: Environmental Control &amp; Tracking</div>
+  <a href="#chapter-5" class="nav-link">
+    <span class="nav-chapter-num">CH 5</span>
+    <span>Reactor Coolant RL &amp; MDPs</span>
+    <span class="nav-status-pill">[ONLINE]</span>
+  </a>
+  <a href="#chapter-6" class="nav-link">
+    <span class="nav-chapter-num">CH 6</span>
+    <span>Sensor Damage &amp; Tracking HMMs</span>
+    <span class="nav-status-pill">[ONLINE]</span>
+  </a>
+
+  <div class="nav-group-title">Module 4: Diagnostics &amp; Core Reboot</div>
+  <a href="#chapter-7" class="nav-link">
+    <span class="nav-chapter-num">CH 7</span>
+    <span>Autonomous Diagnostics &amp; Safety</span>
+    <span class="nav-status-pill">[ONLINE]</span>
+  </a>
+
+  <div class="nav-group-title">Reference &amp; Verification</div>
+  <a href="#master-bibliography" class="nav-link">
+    <span class="nav-chapter-num">APP</span>
+    <span>Hardware Specs &amp; Bibliography</span>
+  </a>
+  <a href="#submission-declaration" class="nav-link">
+    <span class="nav-chapter-num">DOC</span>
+    <span>Course AI Use Declaration</span>
+  </a>
+</nav>
+
+
+    <main class="main-content">
+      
+<header class="manual-header" id="overview">
+  <div class="topbar-badge">STANDARD OPERATING PROCEDURE // CLASSIFIED ENGINEERING MANUAL</div>
+  <h1 class="manual-title">USSC DAEDALUS: Autonomous Subsystem Emergency Reboot Manual</h1>
+  <p class="manual-subtitle">Field Engineering Handbook for Physical AI Systems in Deep-Space Transit</p>
+  
+  <div class="manual-meta-grid">
+    <div class="meta-item">
+      <span class="meta-label">Course Registry</span>
+      <span class="meta-val">AIF1303 AI Fundamentals</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Academic Program</span>
+      <span class="meta-val">B.S. Physical AI &amp; Robotics</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Curriculum Cycle</span>
+      <span class="meta-val">10-Week EndTerm Capstone (40%)</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Colony Vessel ID</span>
+      <span class="meta-val">USSC Daedalus (Registry NX-842)</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Subsystem Status</span>
+      <span class="meta-val" style="color: var(--status-critical-bright);">CRITICAL REBOOT REQUIRED</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Verification Standard</span>
+      <span class="meta-val">ISO/IEC 22989 &amp; Russell-Norvig AIMA</span>
+    </div>
+  </div>
+
+  <div class="definition-box" style="margin-top: 1.5rem;">
+    <div class="definition-title">Operational Context &amp; Purpose of this Manual</div>
+    <p>
+      At 03:42 shipboard standard time during transit through the Kepler Belt, the colony transport vessel <em>USSC Daedalus</em> sustained secondary debris impacts, triggering emergency isolations across the primary reactor, environmental scrubbers, docking arrays, and autonomous routing conduits. The primary cognitive executive suffered memory corruption and was brought offline.
+    </p>
+    <p>
+      This manual serves as the definitive engineering recovery protocol. It translates core principles of Artificial Intelligence into emergency field procedures. Each module details the mathematical formulation, algorithmic execution, and physical hardware constraints required to restore autonomous functionality. Physical AI principles are embedded throughout: every algorithm must execute on resource-constrained embedded field controllers, account for motor torque and sensor noise, and adhere to life-critical safety margins.
+    </p>
+  </div>
+
+  <div class="specs-table-wrapper" style="margin-top: 1.5rem;">
+    <table class="specs-table">
+      <thead>
+        <tr>
+          <th>Subsystem Module</th>
+          <th>Syllabus Mapping</th>
+          <th>Physical AI Subsystem</th>
+          <th>Core Algorithmic Protocols</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Module 1: Navigation &amp; Clearance</strong></td>
+          <td>Weeks 1 to 3</td>
+          <td>Exterior Hull Crawler Robotics &amp; Power Grid</td>
+          <td>PEAS, State Space, BFS, DFS, UCS, A* Search, Hill Climbing, Simulated Annealing, CSP (AC-3, Backtracking)</td>
+        </tr>
+        <tr>
+          <td><strong>Module 2: Hostile Intrusion &amp; Contention</strong></td>
+          <td>Week 4</td>
+          <td>Cargo Bay Defense Sentry Turrets</td>
+          <td>Adversarial Game Trees, Minimax, Alpha-Beta Pruning, Expectimax under Hazard</td>
+        </tr>
+        <tr>
+          <td><strong>Module 3: Environmental Control &amp; Tracking</strong></td>
+          <td>Weeks 5 to 7</td>
+          <td>Tokamak Fusion Coolant &amp; Hull Sensor Mesh</td>
+          <td>Markov Decision Processes (MDPs), Bellman Optimality, Q-Learning, Bayes' Rule, Bayesian Networks, HMM Forward Filtering</td>
+        </tr>
+        <tr>
+          <td><strong>Module 4: Crew Diagnostics &amp; Core Reboot</strong></td>
+          <td>Weeks 8 to 10</td>
+          <td>Gas Chromatograph Arrays, Optical Docking, &amp; AI Core</td>
+          <td>Utility Theory, Naive Bayes, Linear Classifiers, Perceptrons, MLPs, Backpropagation, Transformers (Self-Attention), AI Safety</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</header>
+
+      
+<section class="manual-chapter" id="chapter-1">
+  <div class="chapter-directive">
+    <div class="directive-meta-bar">
+      <span>SUBSYSTEM PROTOCOL // NAV-PEAS-01</span>
+      <span class="declassified-stamp">SEC-CLR: TOP SECRET // CREW REBOOT AUTH</span>
+      <span>SYSTEM STATUS: COMPROMISED</span>
+    </div>
+    <h2 class="chapter-title">Chapter 1: Sensory Array &amp; Space Mapping: Agent Architectures &amp; Breach Avoidance Pathfinding</h2>
+    <p class="chapter-subtitle">Autonomous agent formulation, environmental taxonomy, uninformed search strategies, and admissible heuristic pathfinding on damaged hull geometries.</p>
+    <table class="specs-table">
+      <thead>
+        <tr>
+          <th>Subsystem</th>
+          <th>Compute Bus</th>
+          <th>Memory Ceiling</th>
+          <th>Cycle Deadline</th>
+          <th>Physical Actuator</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>LIDAR &amp; Navigation Crawler Alpha-1</td>
+          <td>SPI-4 100 MHz</td>
+          <td>512 KB SRAM</td>
+          <td>100 ms Hard RT</td>
+          <td>Magnetic Crawler DC Motors</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 1. System Emergency Briefing -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 1.1</span> System Emergency Briefing</h3>
+    <div class="briefing-callout">
+      <div class="briefing-header">
+        <span class="briefing-tag">Incident Report: Hull Breach Sector 4-B</span>
+        <span class="briefing-status">STATUS: DEPRESSURIZING // O2 LOSS: 14.2 kPa/min</span>
+      </div>
+      <p class="briefing-text">
+        At 03:42 shipboard time, secondary micrometeorite fragments breached the exterior titanium-carbide plating of Sector 4-B, threatening primary cryogenic bay pressurization. The primary bridge navigation network is offline. Autonomous repair crawler unit Alpha-1 has been deployed from airlock staging bay 1 to reach and weld breach point Omega before life support reserve drops below the critical 15-minute margin. The exterior hull is pitted with impassable decompression craters, exposed high-voltage wiring, and radiation plumes.
+      </p>
+      <p class="briefing-text">
+        Alpha-1 must plan an optimal, collision-free trajectory across the discretized hull grid. Every centimeter traversed drains precious reserve battery power. The crawler embedded microprocessor operates under a strict 100-millisecond real-time cycle deadline, requiring search algorithms that minimize node expansions while guaranteeing zero risk of crawler loss in the vacuum of space.
+      </p>
+    </div>
+  </div>
+
+  <!-- 2. Theoretical Foundation & Mathematical Formulation -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 1.2</span> Theoretical Foundation &amp; Mathematical Formulation</h3>
+    
+    <p>
+      An intelligent agent is formally defined as an entity that perceives its environment through sensors and acts upon that environment through actuators. The agent behavior is governed by an internal agent function, denoted mathematically as:
+    </p>
+
+    <div class="math-block">
+      $$
+      f: \mathcal{P}^* \to \mathcal{A}
+      $$
+      <div class="formula-label">Equation 1.1: Agent Function Mapping Percept Sequences to Actions</div>
+    </div>
+
+    <figure class="diagram-frame">
+      <div class="diagram-header">
+        <span class="diagram-id">DIAGRAM 1.1 // AGENT ARCHITECTURE</span>
+        <span>SPEC-PEAS-AIF1303 // RECOVERY STAGE 1</span>
+      </div>
+      <div class="diagram-viewport">
+        <img class="diagram-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDTWW1w669zb2l2OZgSKBRJH4QBIaZnAuqRm9JDHg_FcSpJKhozpuqiVlL&s=10" alt="Closed-loop agent-environment interface showing state transition feedback and actuator commands." width="480" height="240" loading="lazy">
+      </div>
+      <figcaption class="diagram-caption">
+        <strong>Figure 1.1:</strong> Closed-loop agent-environment interface. Sensory percepts are acquired from the microgravity hull domain, processed via the agent program on ARM Cortex-M7 embedded SRAM, and dispatched to robotic magnetic actuators under strict real-time physical AI deadlines (Russell &amp; Norvig, Ch. 2).
+      </figcaption>
+    </figure>
+
+    <p>
+      Here, \(\mathcal{P}^*\) represents the history of all percept sequences accumulated by the system up to time \(t\), and \(\mathcal{A}\) denotes the set of executable physical actions. In physical robotics, the agent program implements this function on physical hardware architecture under finite compute, memory, and battery constraints.
+    </p>
+
+    <div class="definition-box">
+      <div class="definition-title">PEAS Specification: Exterior Repair Crawler Alpha-1</div>
+      <ul>
+        <li><strong>Performance Measure:</strong> Minimize path traversal cost, seal all structural breaches before atmospheric depletion (penalty: -1000 for breach blowout), minimize electrical energy consumption per centimeter traveled, avoid hull fracture obstacles.</li>
+        <li><strong>Environment:</strong> Microgravity exterior hull surface, localized decompression craters, radiation plumes, temperature differentials from -150°C to +120°C, high-frequency cosmic noise.</li>
+        <li><strong>Actuators:</strong> Magnetic crawler tracks with dual brushless DC motors, cold-gas RCS stabilization thrusters, multi-axis robotic welding arm, inductive surface clamps.</li>
+        <li><strong>Sensors:</strong> Stereoscopic LIDAR array (10 Hz point cloud), surface ultrasonic thickness transducer, 6-axis inertial measurement unit (IMU), battery shunt ammeter.</li>
+      </ul>
+    </div>
+
+    <p>
+      Understanding the mathematical nature of the operational environment dictates algorithm selection:
+    </p>
+    <ul>
+      <li><strong>Observability:</strong> Partially observable if hull debris occludes remote sectors; fully observable once the orbital LIDAR satellite relays the elevation grid map.</li>
+      <li><strong>Determinism:</strong> Stochastic in the presence of micro-meteoroid impacts and track slip, though modeled deterministically for initial path generation.</li>
+      <li><strong>Episodic vs. Sequential:</strong> Sequential. Current steering decisions affect future crawler stability, power levels, and distance to the target breach.</li>
+      <li><strong>Static vs. Dynamic:</strong> Dynamic. Breach expansion and debris trajectories alter traversability while the agent calculates its route.</li>
+      <li><strong>Discrete vs. Continuous:</strong> Continuous physical motion, discretized into a navigation grid graph \(G = (V, E)\) for computational tractability.</li>
+    </ul>
+
+    <p>
+      Formally, a search problem on the hull grid is defined by a 5-tuple:
+    </p>
+
+    <div class="math-block">
+      $$
+      \langle S_0, \text{Actions}(s), \text{Result}(s, a), \text{Goal-Test}(s), c(s, a, s') \rangle
+      $$
+      <div class="formula-label">Equation 1.2: Formal Problem Formulation Tuple</div>
+    </div>
+
+    <p>
+      Where \(S_0\) is the initial coordinate state, \(\text{Actions}(s)\) returns the set of legal directional movements, \(\text{Result}(s, a)\) yields the deterministic transition state \(s'\), \(\text{Goal-Test}(s)\) verifies arrival at the target breach coordinate, and \(c(s, a, s')\) is the step cost representing energy consumption and surface traversal roughness.
+    </p>
+
+    <p>
+      In uninformed search, the agent explores states without domain-specific knowledge beyond the step cost. Breadth-First Search (BFS) expands the shallowest unexpanded node using a FIFO queue, guaranteeing optimality when all step costs are equal (\(c = 1\)). Depth-First Search (DFS) expands the deepest node via a LIFO stack, which requires minimal space \(O(bm)\) but risks non-termination in cyclic graphs and fails to guarantee shortest paths. Uniform-Cost Search (UCS), equivalent to Dijkstra algorithm, expands nodes in order of cumulative path cost \(g(n)\) via a priority queue:
+    </p>
+
+    <div class="math-block">
+      $$
+      g(n) = \sum_{i=1}^{k} c(s_{i-1}, a_i, s_i)
+      $$
+      <div class="formula-label">Equation 1.3: Cumulative Path Cost from Start to Node n</div>
+    </div>
+
+    <p>
+      UCS is complete and cost-optimal for positive edge costs \(c(s, a, s') \ge \epsilon > 0\), but it explores uniformly in all directions, expanding unnecessary nodes opposite the target goal.
+    </p>
+
+    <p>
+      Informed search introduces a heuristic function \(h(n)\), estimating the remaining cost to the goal from node \(n\). The \(A^*\) search algorithm combines the actual past cost \(g(n)\) with the estimated future cost \(h(n)\):
+    </p>
+
+    <div class="math-block">
+      $$
+      f(n) = g(n) + h(n)
+      $$
+      <div class="formula-label">Equation 1.4: A* Node Evaluation Function</div>
+    </div>
+
+    <p>
+      For grid navigation with orthogonal 4-way movement, the Manhattan distance heuristic is calculated as:
+    </p>
+
+    <div class="math-block">
+      $$
+      h_{\text{Manhattan}}(n) = |x_n - x_g| + |y_n - y_g|
+      $$
+      <div class="formula-label">Equation 1.5: Manhattan Distance Heuristic</div>
+    </div>
+
+    <p>
+      When diagonal movement is permitted, the Euclidean distance provides a straight-line geometric lower bound:
+    </p>
+
+    <div class="math-block">
+      $$
+      h_{\text{Euclidean}}(n) = \sqrt{(x_n - x_g)^2 + (y_n - y_g)^2}
+      $$
+      <div class="formula-label">Equation 1.6: Euclidean Distance Heuristic</div>
+    </div>
+
+    <p>
+      To guarantee that \(A^*\) finds the optimal path without suboptimal lock-in, the heuristic must satisfy two mathematical properties:
+    </p>
+
+    <div class="definition-box">
+      <div class="definition-title">Mathematical Conditions for A* Optimality</div>
+      <p>
+        <strong>1. Admissibility (Tree Search Optimality):</strong> A heuristic \(h(n)\) is admissible if it never overestimates the true minimal cost \(h^*(n)\) to reach the goal:
+      </p>
+      <div class="math-block">
+      $$
+      \forall n, \quad 0 \le h(n) \le h^*(n)
+      $$
+    </div>
+      <p>
+        <em>Proof sketch:</em> Suppose a suboptimal goal \(G_2\) is selected from the frontier before the optimal goal \(G\). Because \(G_2\) is a goal node, \(h(G_2) = 0\), so \(f(G_2) = g(G_2) > g(G)\). For any ancestor node \(n\) of \(G\) on the frontier, \(f(n) = g(n) + h(n) \le g(n) + h^*(n) = g(G) < g(G_2) = f(G_2)\). Hence, \(A^*\) will always expand \(n\) before \(G_2\), ensuring \(G_2\) cannot be returned first.
+      </p>
+      <p>
+        <strong>2. Consistency / Monotonicity (Graph Search Optimality):</strong> In graph search with a closed set (explored table), a heuristic \(h(n)\) is consistent if for every node \(n\) and every successor \(n'\) generated by action \(a\), the estimated cost satisfies the triangle inequality:
+      </p>
+      <div class="math-block">
+      $$
+      h(n) \le c(n, a, n') + h(n')
+      $$
+    </div>
+      <p>
+        Consistency guarantees that the sequence of \(f(n)\) values along any path is non-decreasing: \(f(n') = g(n') + h(n') = g(n) + c(n, a, n') + h(n') \ge g(n) + h(n) = f(n)\). Consequently, the first time \(A^*\) expands a state, the path found to that state is guaranteed to be optimal, eliminating the need to reopen nodes in the closed set.
+      </p>
+      <p>
+        <strong>Dominance:</strong> Given two admissible heuristics \(h_1\) and \(h_2\), if \(h_2(n) \ge h_1(n)\) for all nodes \(n\), then \(h_2\) dominates \(h_1\). A dominating heuristic expands fewer or equal nodes than \(h_1\), directly conserving embedded CPU cycles.
+      </p>
+    </div>
+  </div>
+
+  <!-- 3. Algorithmic Execution / Pseudo-code -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 1.3</span> Algorithmic Execution &amp; Pseudo-code</h3>
+    
+    <p>
+      Onboard Alpha-1, pathfinding executes on an ARM Cortex-M7 microcontroller with 512 KB of SRAM. To prevent memory exhaustion during graph search, we implement \(A^*\) using a binary min-heap for the priority queue and an open-addressing hash set for visited coordinates.
+    </p>
+
+    <div class="code-container">
+      <div class="code-header">
+        <span class="code-lang">Algorithm 1.1: Graph-Search A* with Consistent Heuristic</span>
+        <span>Target: Embedded Path Planner</span>
+      </div>
+      <pre><code>function A_STAR_HULL_SEARCH(grid, start, goal, heuristic_fn):
+    // Priority queue holds tuples (f_cost, node_coords)
+    frontier = PriorityQueue()
+    frontier.insert(item=start, priority=heuristic_fn(start, goal))
+    
+    // Tracking tables
+    came_from = HashMap()          // Maps node -> predecessor node
+    cost_so_far = HashMap()        // Maps node -> g_cost
+    closed_set = HashSet()         // Explored nodes
+    
+    cost_so_far[start] = 0
+    came_from[start] = null
+    
+    while not frontier.is_empty():
+        current = frontier.extract_min()
+        
+        // Goal test upon expansion, not generation
+        if current == goal:
+            return RECONSTRUCT_PATH(came_from, current)
+            
+        if current in closed_set:
+            continue
+        closed_set.add(current)
+        
+        for next_node in grid.get_passable_neighbors(current):
+            if next_node in closed_set:
+                continue
+                
+            new_cost = cost_so_far[current] + grid.traversal_cost(current, next_node)
+            
+            if next_node not in cost_so_far or new_cost &lt; cost_so_far[next_node]:
+                cost_so_far[next_node] = new_cost
+                priority = new_cost + heuristic_fn(next_node, goal)
+                frontier.insert(item=next_node, priority=priority)
+                came_from[next_node] = current
+                
+    return FAILURE // No passable path through hull breach debris</code></pre>
+    </div>
+
+    <div class="specs-table-wrapper">
+      <table class="specs-table">
+        <thead>
+          <tr>
+            <th>Search Strategy</th>
+            <th>Frontier Structure</th>
+            <th>Time Complexity</th>
+            <th>Space Complexity</th>
+            <th>Complete?</th>
+            <th>Cost-Optimal?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Breadth-First Search (BFS)</strong></td>
+            <td>FIFO Queue</td>
+            <td>$O(b^d)$</td>
+            <td>$O(b^d)$</td>
+            <td>Yes (if $b < \infty$)</td>
+            <td>Yes (if unit step costs)</td>
+          </tr>
+          <tr>
+            <td><strong>Depth-First Search (DFS)</strong></td>
+            <td>LIFO Stack</td>
+            <td>$O(b^m)$</td>
+            <td>$O(bm)$</td>
+            <td>No (fails in infinite loops)</td>
+            <td>No</td>
+          </tr>
+          <tr>
+            <td><strong>Uniform-Cost Search (UCS)</strong></td>
+            <td>Priority Queue by $g(n)$</td>
+            <td>$O(b^{1 + \lfloor C^* / \epsilon \rfloor})$</td>
+            <td>$O(b^{1 + \lfloor C^* / \epsilon \rfloor})$</td>
+            <td>Yes (if $c \ge \epsilon > 0$)</td>
+            <td>Yes</td>
+          </tr>
+          <tr>
+            <td><strong>$A^*$ Search (Admissible $h$)</strong></td>
+            <td>Priority Queue by $g(n) + h(n)$</td>
+            <td>$O(b^{\epsilon d})$ (heuristic quality dependent)</td>
+            <td>$O(b^d)$ (retains all nodes in memory)</td>
+            <td>Yes</td>
+            <td>Yes</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+      <figure class="diagram-frame" style="margin: 0;">
+        <div class="diagram-header">
+          <span class="diagram-id">DIAGRAM 1.2 // A* PRIORITY QUEUE</span>
+          <span>MEMORY FOOTPRINT: $O(b^d)$</span>
+        </div>
+        <div class="diagram-viewport">
+          <img class="diagram-img" src="https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSrkb6P5DRmgqrVpyprbkvIn4vmrYAf_YuueXXeJzEkuWYzKYdHmoN7Nt3xDoP797fE5H5SnJLOusuKWKo" alt="A* and UCS Priority Queue frontier node expansion visualization." width="380" height="220" loading="lazy">
+        </div>
+        <figcaption class="diagram-caption">
+          <strong>Figure 1.2:</strong> Priority queue frontier expansion under evaluation function \(f(n) = g(n) + h(n)\).
+        </figcaption>
+      </figure>
+
+      <figure class="diagram-frame" style="margin: 0;">
+        <div class="diagram-header">
+          <span class="diagram-id">DIAGRAM 1.3 // DFS CALL STACK</span>
+          <span>MEMORY FOOTPRINT: $O(bm)$</span>
+        </div>
+        <div class="diagram-viewport">
+          <img class="diagram-img" src="https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSe2j5QCV9o_Lr5LRTH-NLl_COclfYTZv48x9isWeJujk8bDCYYbYUIGXrN02bla4GjbbxkIWY-a_x7NIY" alt="Depth-first search call-stack recursive depth traversal." width="380" height="220" loading="lazy">
+        </div>
+        <figcaption class="diagram-caption">
+          <strong>Figure 1.3:</strong> LIFO call-stack memory depth during uninformed depth-first search traversal.
+        </figcaption>
+      </figure>
+    </div>
+
+    <p>
+      In physical robotics applications, memory footprint is the primary bottleneck. Because \(A^*\) retains all generated nodes in memory, memory consumption on a dense 1000x1000 grid can exceed available SRAM before goal discovery. Under severe RAM limits, Memory-Bounded \(A^*\) (SMA*) or Iterative-Deepening \(A^*\) (IDA*) can be used, trading redundant re-expansions for an \(O(bd)\) linear memory footprint.
+    </p>
+  </div>
+
+  <!-- 4. Interactive Simulation Module -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 1.4</span> Interactive Simulation Module: Exterior Hull Pathfinder</h3>
+    <p>
+      Test search strategies on the interactive exterior hull grid below. Click on any cell to place or remove structural breach obstacles (rendered in red). Select search algorithms from the control panel to observe how the frontier expands across the ship surface.
+    </p>
+
+    <div class="sim-container">
+      <div class="sim-header">
+        <span class="sim-title">Simulation 1.1: Hull Pathfinder Guidance Array</span>
+        <span class="sim-status">SYSTEM ONLINE</span>
+      </div>
+      <div class="sim-body">
+        <div class="sim-controls">
+          <div class="sim-control-group">
+            <label for="sim1-algo-select">Algorithm:</label>
+            <select id="sim1-algo-select" class="sim-select">
+              <option value="astar_manhattan">A* Search (Manhattan Heuristic)</option>
+              <option value="astar_euclidean">A* Search (Euclidean Heuristic)</option>
+              <option value="ucs">Uniform-Cost Search (UCS)</option>
+              <option value="bfs">Breadth-First Search (BFS)</option>
+              <option value="dfs">Depth-First Search (DFS)</option>
+            </select>
+          </div>
+          <button id="sim1-btn-run" class="btn-primary">Auto Run</button>
+          <button id="sim1-btn-step" class="btn-secondary">Single Step</button>
+          <button id="sim1-btn-reset" class="btn-secondary">Reset Path</button>
+          <button id="sim1-btn-clear-obs" class="btn-secondary">Clear Debris</button>
+        </div>
+
+        <div class="sim-canvas-wrapper">
+          <canvas id="sim1-canvas" width="480" height="480" aria-label="Interactive 12 by 12 Hull Pathfinding Grid Canvas"></canvas>
+        </div>
+
+        <div class="sim-telemetry">
+          <div class="telemetry-item">
+            <span class="telemetry-label">Nodes Expanded</span>
+            <span id="sim1-stat-expanded" class="telemetry-value">0</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Frontier Size</span>
+            <span id="sim1-stat-frontier" class="telemetry-value">1</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Path Traversal Cost</span>
+            <span id="sim1-stat-cost" class="telemetry-value">Pending</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Hardware Cycle Budget</span>
+            <span class="telemetry-value">&lt; 100 ms</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Academic Post-Mortem & Citations -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 1.5</span> Academic Post-Mortem &amp; Citations</h3>
+    <div class="citations-box">
+      <p>
+        The navigation procedures implemented in Alpha-1 originate from the seminal foundations of state-space search and heuristic pathfinding:
+      </p>
+      <ul class="citation-list">
+        <li class="citation-item">
+          <strong>Hart, P. E., Nilsson, N. J., &amp; Raphael, B. (1968).</strong> A Formal Basis for the Heuristic Determination of Minimum Cost Paths. <em>IEEE Transactions on Systems Science and Cybernetics</em>, 4(2), 100-107. [Formulated the \(A^*\) algorithm and proved cost-optimality under admissible heuristics].
+        </li>
+        <li class="citation-item">
+          <strong>Russell, S. J., &amp; Norvig, P. (2020).</strong> <em>Artificial Intelligence: A Modern Approach</em> (4th ed.). Pearson. Chapter 2 ("Intelligent Agents") and Chapter 3 ("Solving Problems by Searching"). [Provided the PEAS framework, environmental taxonomy, and proofs for heuristic consistency and dominance].
+        </li>
+        <li class="citation-item">
+          <strong>Louwerse, M. M. (2021).</strong> <em>Understanding Artificial Minds through Human Minds</em>. Routledge. Chapter 3 ("Spatial Reasoning and Navigation"). [Analyzed how machine pathfinding algorithms differ from human spatial mental models, demonstrating how systematic heuristic expansion prevents cognitive oversights during stress].
+        </li>
+        <li class="citation-item">
+          <strong>Zerilli, J. (2021).</strong> <em>A Citizen's Guide to Artificial Intelligence</em>. MIT Press. Chapter 2 ("Algorithms and Autonomy"). [Explored the moral and operational accountability of delegating safety-critical navigation decisions to autonomous machines in hazardous environments].
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+      
+<section class="manual-chapter" id="chapter-2">
+  <div class="chapter-directive">
+    <div class="directive-meta-bar">
+      <span>SUBSYSTEM PROTOCOL // PWR-CSP-02</span>
+      <span class="declassified-stamp">SEC-CLR: RESTRICTED // AUX BUS CONTINGENCY</span>
+      <span>SYSTEM STATUS: OVERLOAD WARNING</span>
+    </div>
+    <h2 class="chapter-title">Chapter 2: Auxiliary Power Distribution under Constraint: Local Search &amp; Constraint Satisfaction Problems</h2>
+    <p class="chapter-subtitle">Local optimization landscapes, simulated annealing thermal schedules, and formal constraint satisfaction programming for resource-bounded electrical distribution.</p>
+    <table class="specs-table">
+      <thead>
+        <tr>
+          <th>Subsystem</th>
+          <th>Compute Bus</th>
+          <th>Memory Ceiling</th>
+          <th>Propagation Constraint</th>
+          <th>Actuator Interface</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Auxiliary Power Distribution Unit</td>
+          <td>CAN-2 1.0 Mbps</td>
+          <td>1.0 MB SRAM</td>
+          <td>AC-3 Arc Consistency Queue</td>
+          <td>High-Voltage Solid-State Relays</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 1. System Emergency Briefing -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 2.1</span> System Emergency Briefing</h3>
+    <div class="briefing-callout">
+      <div class="briefing-header">
+        <span class="briefing-tag">Incident Report: Auxiliary Power Bus Overload</span>
+        <span class="briefing-status">STATUS: BUS THERMAL WARNING // CAPACITY: 8.0 kW CAP</span>
+      </div>
+      <p class="briefing-text">
+        Primary tokamak fusion transmission conduits have suffered magnetic containment breakdown, dropping the ship main electrical distribution grid. All vessel operations are temporarily routed through the auxiliary emergency lithium-hydride fuel cell bank. Total instantaneous power capacity is capped at 8.0 kilowatts to prevent irreversible bus-bar thermal melting.
+      </p>
+      <p class="briefing-text">
+        Six mission-critical subsystems compete for this restricted electrical budget: Life Support, Kinetic Shielding, Cryogenic Stasis Pods, Navigation Array, Thruster Feeds, and Communications. Uncoordinated allocation will induce inductive transformer spikes, triggering emergency circuit breakers and asphyxiating the dormant crew. Engineering personnel must execute formal constraint satisfaction protocols to find a viable, conflict-free power configuration within 90 seconds.
+      </p>
+    </div>
+  </div>
+
+  <!-- 2. Theoretical Foundation & Mathematical Formulation -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 2.2</span> Theoretical Foundation &amp; Mathematical Formulation</h3>
+    
+    <p>
+      When the sequence of actions leading to a goal is irrelevant and only the final configuration matters, the planning challenge transitions from pathfinding to local search and optimization. In local search, the algorithm maintains one or more active states and moves iteratively toward neighboring configurations on an objective function surface \(f(s)\).
+    </p>
+
+    <p>
+      Hill-Climbing search (greedy local search) continuously moves in the direction of increasing objective value \(\Delta f > 0\). In state-space landscapes with complex topologies, standard hill climbing suffers from three classic structural failure modes:
+    </p>
+    <ul>
+      <li><strong>Local Maxima:</strong> Peaks higher than neighboring states but lower than the global optimum, trapping the greedy search.</li>
+      <li><strong>Plateaus:</strong> Flat regions where neighboring states have identical evaluation scores (\(\Delta f = 0\)), causing the search to wander aimlessly without a directional gradient.</li>
+      <li><strong>Ridges:</strong> Sequences of local maxima that slope gently upward, where individual orthogonal steps in any cardinal direction yield lower values, stalling progress.</li>
+    </ul>
+
+    <p>
+      To escape local traps, Simulated Annealing borrows principles from statistical thermodynamics, modeling the controlled cooling of metallurgical crystal structures. At each iteration, a random neighbor state \(s'\) is generated. If \(s'\) improves the objective (\(\Delta E = f(s) - f(s') < 0\) for cost minimization), the transition is accepted unconditionally. If the neighbor worsens the objective (\(\Delta E > 0\)), the algorithm accepts the move probabilistically according to the Boltzmann-Gibbs distribution:
+    </p>
+
+    <div class="math-block">
+      $$
+      P(\text{accept } s' \mid s) = \begin{cases} 
+      1 & \text{if } \Delta E \le 0 \\ 
+      \exp\left(-\frac{\Delta E}{T}\right) & \text{if } \Delta E > 0 
+      \end{cases}
+      $$
+      <div class="formula-label">Equation 2.1: Metropolis-Hastings Acceptance Criterion</div>
+    </div>
+
+    <p>
+      Here, \(T\) is an artificial temperature parameter governed by a monotonic annealing cooling schedule \(T(t)\), such as geometric decay \(T_{k+1} = \alpha T_k\) where \(0.85 \le \alpha < 1.0\). When \(T\) is high, the agent accepts suboptimal moves freely, exploring diverse energy basins. As \(T \to 0\), the probability of accepting worse moves approaches zero, causing the algorithm to settle smoothly into the nearest deep optimum.
+    </p>
+
+    <div class="definition-box">
+      <div class="definition-title">Formal Constraint Satisfaction Problem (CSP) Definition</div>
+      <p>
+        A Constraint Satisfaction Problem is formally defined as a 3-tuple \(\langle X, D, C \rangle\):
+      </p>
+      <ul>
+        <li><strong>Variables \(X\):</strong> A finite set of variables \(X = \{X_1, X_2, \dots, X_n\}\). For the power grid: \(X = \{\text{LS}, \text{KS}, \text{CP}, \text{NV}, \text{TR}, \text{CM}\}\).</li>
+        <li><strong>Domains \(D\):</strong> A set of discrete domains \(D = \{D_1, D_2, \dots, D_n\}\), where each \(D_i\) represents the allowable power levels for variable \(X_i\). For example, \(D_{\text{LS}} = \{2, 3\}\), \(D_{\text{TR}} = \{0, 1, 2, 3\}\).</li>
+        <li><strong>Constraints \(C\):</strong> A set of constraints \(C = \{C_1, C_2, \dots, C_m\}\). Each constraint \(C_j = \langle \text{scope}, R \rangle\) specifies the subset of variables involved and the relation restricting their simultaneous assignments.</li>
+      </ul>
+    </div>
+
+    <p>
+      The Daedalus emergency power allocation is constrained by physical hardware limitations:
+    </p>
+
+    <div class="math-block">
+      $$
+      \begin{aligned}
+      &C_1: \quad \text{LS} + \text{KS} + \text{CP} + \text{NV} + \text{TR} + \text{CM} \le 8.0 \quad \text{(Total Bus Capacity Limit)} \\
+      &C_2: \quad \text{KS} + \text{TR} \le 4.0 \quad \text{(Substation Alpha Overheating Threshold)} \\
+      &C_3: \quad \text{LS} \ge 2.0 \quad \text{(Life Support Atmospheric Scrubbing Minimum)} \\
+      &C_4: \quad \text{CP} \ge 1.0 \quad \text{(Cryogenic Stasis Cryo-Fluid Recirculation)}
+      \end{aligned}
+      $$
+      <div class="formula-label">Equation 2.2: Physical Hard Constraints on Vessel Electrical Buses</div>
+    </div>
+
+    <p>
+      Solving CSPs through pure backtracking search (depth-first search with single-variable trial assignments) has a worst-case time complexity of \(O(d^n)\), where \(d = \max |D_i|\) is domain size and \(n\) is the number of variables. To achieve tractability, the agent combines search with constraint propagation.
+    </p>
+
+    <div class="definition-box">
+      <div class="definition-title">Inference: Arc Consistency (AC-3) &amp; Variable Ordering Heuristics</div>
+      <p>
+        A directed arc \((X_i, X_j)\) in the constraint graph is arc-consistent if for every value \(x \in D_i\), there exists at least one value \(y \in D_j\) satisfying the constraint between \(X_i\) and \(X_j\). The AC-3 algorithm enforces pairwise consistency across all arcs:
+      </p>
+      <div class="math-block">
+      $$
+      \forall x \in D_i, \quad \exists y \in D_j \quad \text{such that} \quad (x, y) \in R_{ij}
+      $$
+    </div>
+      <p>
+        If no such \(y\) exists, \(x\) is pruned from \(D_i\). Whenever a domain is modified, all incoming arcs \((X_k, X_i)\) are re-added to the verification queue. The maximum time complexity of AC-3 is \(O(cd^3)\), where \(c\) is the number of binary constraints.
+      </p>
+      <p>
+        Backtracking efficiency is enhanced by three standard heuristics:
+      </p>
+      <ul>
+        <li><strong>Minimum Remaining Values (MRV / "Fail-First"):</strong> Choose the unassigned variable with the fewest remaining legal values in its domain. This prunes failing branches at the shallowest possible depth.</li>
+        <li><strong>Degree Heuristic:</strong> Used as a tie-breaker for MRV; selects the variable involved in the largest number of constraints with other unassigned variables.</li>
+        <li><strong>Least Constraining Value (LCV / "Fail-Last"):</strong> Given a chosen variable, select the domain value that eliminates the fewest choices for neighboring variables in the constraint graph.</li>
+      </ul>
+    </div>
+
+    <figure class="diagram-frame">
+      <div class="diagram-header">
+        <span class="diagram-id">DIAGRAM 2.1 // CONSTRAINT TREE PRUNING</span>
+        <span>SPEC-CSP-AC3 // POWER ROUTING DOMAINS</span>
+      </div>
+      <div class="diagram-viewport">
+        <img class="diagram-img" src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQLukEDG74V1ThYV4e-5InlrSgsIl5jjtBdAEw42p1DKsNJ5dg31Bnreuf-Cb-_IKklsDLiogRAeSlkXZs" alt="State-space tree pruning and backtracking search under power routing domain constraints (AC-3)." width="500" height="280" loading="lazy">
+      </div>
+      <figcaption class="diagram-caption">
+        <strong>Figure 2.1:</strong> State-space tree pruning and backtracking search under power routing domain constraints. By maintaining arc consistency (AC-3) across binary transmission line pairs, inconsistent branch allocations are eliminated before recursive exploration, pruning factorial search spaces (Russell &amp; Norvig, Ch. 6).
+      </figcaption>
+    </figure>
+  </div>
+
+  <!-- 3. Algorithmic Execution / Pseudo-code -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 2.3</span> Algorithmic Execution &amp; Pseudo-code</h3>
+    
+    <p>
+      The emergency electrical switching logic combines AC-3 arc consistency pruning with recursive backtracking search. In physical AI deployments, variables represent real inductive relays. Setting an invalid assignment can blow physical fuses, making forward checking mandatory before commanding physical solenoid switches.
+    </p>
+
+    <div class="code-container">
+      <div class="code-header">
+        <span class="code-lang">Algorithm 2.1: AC-3 Arc Consistency &amp; Backtracking CSP Solver</span>
+        <span>Target: Auxiliary Power Router</span>
+      </div>
+      <pre><code>function SOLVE_POWER_GRID_CSP(variables, domains, constraints):
+    // Enforce initial arc consistency before starting search
+    if not AC3(variables, domains, constraints):
+        return FAILURE // Inconsistent constraints: immediate bus trip
+    return BACKTRACK(assignment={}, variables, domains, constraints)
+
+function AC3(variables, domains, constraints):
+    queue = Queue()
+    for each binary constraint C(Xi, Xj) in constraints:
+        queue.push((Xi, Xj))
+        queue.push((Xj, Xi))
+        
+    while not queue.is_empty():
+        (Xi, Xj) = queue.pop()
+        if REVISE(Xi, Xj, domains, constraints):
+            if len(domains[Xi]) == 0:
+                return false // Domain wiped out, problem unsolvable
+            for each Xk in NEIGHBORS(Xi) - {Xj}:
+                queue.push((Xk, Xi))
+    return true
+
+function REVISE(Xi, Xj, domains, constraints):
+    revised = false
+    for each x in copy(domains[Xi]):
+        // Check if there is any y in Dj satisfying constraint(x, y)
+        if not any(constraints.satisfies(Xi=x, Xj=y) for y in domains[Xj]):
+            domains[Xi].remove(x)
+            revised = true
+    return revised
+
+function BACKTRACK(assignment, variables, domains, constraints):
+    if len(assignment) == len(variables):
+        return assignment // All power buses successfully scheduled
+        
+    // Apply MRV (Minimum Remaining Values) heuristic
+    var = SELECT_UNASSIGNED_VARIABLE_MRV(assignment, variables, domains)
+    
+    // Apply LCV (Least Constraining Value) ordering
+    for each value in ORDER_DOMAIN_VALUES_LCV(var, assignment, domains, constraints):
+        if IS_CONSISTENT(var, value, assignment, constraints):
+            assignment[var] = value
+            
+            // Forward checking: prune conflicting values from neighbor domains
+            inferences = FORWARD_CHECK(var, value, assignment, domains, constraints)
+            if inferences != FAILURE:
+                result = BACKTRACK(assignment, variables, domains, constraints)
+                if result != FAILURE:
+                    return result
+                    
+            delete assignment[var]
+            RESTORE_DOMAINS(inferences, domains)
+            
+    return FAILURE</code></pre>
+    </div>
+
+    <div class="specs-table-wrapper">
+      <table class="specs-table">
+        <thead>
+          <tr>
+            <th>Algorithm</th>
+            <th>Search Type</th>
+            <th>Completeness</th>
+            <th>Optimality</th>
+            <th>Physical AI Risk Profile</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Simple Hill Climbing</strong></td>
+            <td>Local / Greedy</td>
+            <td>No (trapped in local optima)</td>
+            <td>No</td>
+            <td>High: leaves vessel partially powered in local sub-peak</td>
+          </tr>
+          <tr>
+            <td><strong>Simulated Annealing</strong></td>
+            <td>Stochastic Local</td>
+            <td>Asymptotically Complete</td>
+            <td>Yes (with infinite cooling)</td>
+            <td>Medium: requires careful thermal schedule tuning</td>
+          </tr>
+          <tr>
+            <td><strong>Backtracking + AC-3 + MRV</strong></td>
+            <td>Systematic Tree Search</td>
+            <td>Yes (finite discrete domains)</td>
+            <td>Yes (finds valid satisfying state)</td>
+            <td>Low: guarantees hardware safety constraints are respected</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      Physical hardware safety imposes strict limits on the solver. The auxiliary bus controllers must evaluate allocations within 50 milliseconds to prevent undervoltage chatter in critical relays. If the CSP solver returns failure (indicating that total demand exceeds available energy even under optimal distribution), the supervisory controller triggers load-shedding protocols, dropping communications and thruster warming to preserve human life support.
+    </p>
+  </div>
+
+  <!-- 4. Interactive Simulation Module -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 2.4</span> Interactive Simulation Module: Power Grid CSP Sandbox</h3>
+    <p>
+      The interactive control panel below models the auxiliary power distribution matrix of the Daedalus. Adjust subsystem voltage allocations manually, adjust the total capacity cap, or trigger the automated CSP solver to observe constraint resolution in real time.
+    </p>
+
+    <div class="sim-container" id="sim2-container">
+      <div class="sim-header">
+        <span class="sim-title">Simulation 2.1: Auxiliary Subsystem Power Allocation Matrix</span>
+        <span class="sim-status">BUS TELEMETRY READY</span>
+      </div>
+      <div class="sim-body">
+        <div class="sim-controls">
+          <div class="sim-control-group">
+            <label for="sim2-algo-select">Inference Engine:</label>
+            <select id="sim2-algo-select" class="sim-select">
+              <option value="backtracking">Backtracking CSP (AC-3 + MRV)</option>
+              <option value="hill_climbing">Local Search (Hill Climbing)</option>
+            </select>
+          </div>
+          <div class="sim-control-group">
+            <label for="sim2-power-limit">Max Power Cap (kW):</label>
+            <input type="number" id="sim2-power-limit" class="sim-input" value="8" min="4" max="14" style="width: 65px;">
+          </div>
+          <button id="sim2-btn-solve" class="btn-primary">Execute Solver</button>
+          <button id="sim2-btn-step" class="btn-secondary">Step Search</button>
+          <button id="sim2-btn-reset" class="btn-secondary">Reset Bus</button>
+        </div>
+
+        <div id="sim2-bus-list" style="background-color: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: 4px; margin-bottom: 1rem;">
+          <!-- Dynamically populated by PowerGridCSPSim -->
+        </div>
+
+        <div class="sim-telemetry">
+          <div class="telemetry-item">
+            <span class="telemetry-label">Total Bus Draw</span>
+            <span id="sim2-stat-total" class="telemetry-value">7 / 8 kW</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Active Conflicts</span>
+            <span id="sim2-stat-conflicts" class="telemetry-value">0</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Constraint Status</span>
+            <span id="sim2-stat-status" class="telemetry-value" style="color: #10b981;">CSP SATISFIED</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Bus Overheat Safety</span>
+            <span class="telemetry-value">NOMINAL (&lt; 65°C)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Academic Post-Mortem & Citations -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 2.5</span> Academic Post-Mortem &amp; Citations</h3>
+    <div class="citations-box">
+      <p>
+        The mathematical frameworks underlying the power routing engine derive from the foundational literature of constraint satisfaction and combinatorial optimization:
+      </p>
+      <ul class="citation-list">
+        <li class="citation-item">
+          <strong>Mackworth, A. K. (1977).</strong> Consistency in Networks of Relations. <em>Artificial Intelligence</em>, 8(1), 99-118. [Originated the arc consistency algorithms, specifically establishing AC-3 as the canonical standard for constraint propagation].
+        </li>
+        <li class="citation-item">
+          <strong>Kirkpatrick, S., Gelatt, C. D., &amp; Vecchi, M. P. (1983).</strong> Optimization by Simulated Annealing. <em>Science</em>, 220(4598), 671-680. [Demonstrated how physical thermal annealing models solve NP-hard combinatorial optimization problems].
+        </li>
+        <li class="citation-item">
+          <strong>Russell, S. J., &amp; Norvig, P. (2020).</strong> <em>Artificial Intelligence: A Modern Approach</em> (4th ed.). Pearson. Chapter 4 ("Search in Complex Environments") and Chapter 6 ("Constraint Satisfaction Problems"). [Detailed theoretical treatment of MRV heuristics, LCV value ordering, and formal constraint graphs].
+        </li>
+        <li class="citation-item">
+          <strong>Louwerse, M. M. (2021).</strong> <em>Understanding Artificial Minds through Human Minds</em>. Routledge. Chapter 4 ("Problem Solving and Constraint Logic"). [Contrasted human heuristic reasoning under resource pressure with algorithmic constraint propagation, explaining why human operators succumb to tunnel vision during power grid crises].
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+      
+<section class="manual-chapter" id="chapter-3">
+  <div class="chapter-directive">
+    <div class="directive-meta-bar">
+      <span>SUBSYSTEM PROTOCOL // SEC-MMX-03</span>
+      <span class="declassified-stamp">SEC-CLR: COMBAT ACTIVE // ENGAGEMENT AUTH</span>
+      <span>SYSTEM STATUS: THREAT ENGAGED</span>
+    </div>
+    <h2 class="chapter-title">Chapter 3: Subsystem Defense Protocols: Adversarial Search, Game Trees, &amp; Alpha-Beta Pruning</h2>
+    <p class="chapter-subtitle">Zero-sum competitive multi-agent game formulations, recursive minimax mechanics, alpha-beta pruning proofs, and expectimax decision-making under stochastic hazards.</p>
+    <table class="specs-table">
+      <thead>
+        <tr>
+          <th>Subsystem</th>
+          <th>Compute Bus</th>
+          <th>Search Ply Ceiling</th>
+          <th>Pruning Guarantee</th>
+          <th>Physical Actuator</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sentry Fire-Control System</td>
+          <td>PCIe Gen3 x4</td>
+          <td>4 Ply Real-Time</td>
+          <td>Alpha-Beta (alpha >= beta)</td>
+          <td>Kinetic Defense Turrets &amp; Gimbal Servos</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 1. System Emergency Briefing -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 3.1</span> System Emergency Briefing</h3>
+    <div class="briefing-callout">
+      <div class="briefing-header">
+        <span class="briefing-tag">Incident Report: Cargo Bay 3 Breach &amp; Intruder Detection</span>
+        <span class="briefing-status">STATUS: COMBAT ACTIVE // DEFENSE ZONE COMPROMISED</span>
+      </div>
+      <p class="briefing-text">
+        At 04:12 shipboard time, following hull decompression, an autonomous scavenging drone penetrated Cargo Bay 3 via the breached pressure seal. The intruder active objective is to sever auxiliary cryogenic coolant manifolds to scavenge rare copper-palladium conduits. Automated defense sentry turrets have engaged internal security protocols.
+      </p>
+      <p class="briefing-text">
+        This engagement is a deterministic, zero-sum adversarial contest: every tactical advantage achieved by the intruder directly degrades Daedalus survival margins. The sentry turret fire-control computer must anticipate hostile evasion, manage limited kinetic ammunition, respect motorized gimbal slew rates, and choose optimal firing solutions before the scavenger reaches the cryogenic manifold.
+      </p>
+    </div>
+  </div>
+
+  <!-- 2. Theoretical Foundation & Mathematical Formulation -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 3.2</span> Theoretical Foundation &amp; Mathematical Formulation</h3>
+    
+    <p>
+      In single-agent search (such as \\(A^*\\)), the environment is passive: the agent plans a trajectory through a static or stochastic world that does not actively attempt to frustrate its objectives. In adversarial environments, multiple agents possess conflicting utility functions.
+    </p>
+
+    <div class="definition-box">
+      <div class="definition-title">Formal Zero-Sum Game Definition</div>
+      <p>
+        A two-player, perfect-information, turn-taking zero-sum game is defined by a 6-tuple:
+      </p>
+      <div class="math-block">
+      $$
+      \\langle S_0, \\text{Player}(s), \\text{Actions}(s), \\text{Result}(s, a), \\text{Terminal-Test}(s), \\text{Utility}(s, p) \\rangle
+      $$
+    </div>
+      <ul>
+        <li><strong>Initial State \\(S_0\\):</strong> The starting physical layout of sentry turrets and intruder drones in Cargo Bay 3.</li>
+        <li><strong>Player Function \\(\\text{Player}(s)\\):</strong> Defines whose turn it is to act (\\(\\text{MAX}\\) representing ship sentry defense; \\(\\text{MIN}\\) representing the hostile scavenger).</li>
+        <li><strong>Actions \\(\\text{Actions}(s)\\):</strong> The set of legal maneuvers or firing solutions available to the active player in state \\(s\\).</li>
+        <li><strong>Transition Model \\(\\text{Result}(s, a)\\):</strong> Returns the resulting state after executing action \\(a\\).</li>
+        <li><strong>Terminal Test \\(\\text{Terminal-Test}(s)\\):</strong> True if the engagement is resolved (e.g., intruder destroyed or cryogenic line severed); false otherwise.</li>
+        <li><strong>Utility Function \\(\\text{Utility}(s, p)\\):</strong> A numeric payoff function for player \\(p\\) at terminal state \\(s\\). In zero-sum games: \\(\\text{Utility}_{\\text{MAX}}(s) + \\text{Utility}_{\\text{MIN}}(s) = 0\\).</li>
+      </ul>
+    </div>
+
+    <p>
+      The Minimax algorithm computes the optimal strategy for \\(\\text{MAX}\\) under the fundamental assumption that \\(\\text{MIN}\\) plays with perfect rationality to minimize \\(\\text{MAX}\\) payoff. The recursive minimax value \\(V(s)\\) is expressed as:
+    </p>
+
+    <div class="math-block">
+      $$
+      V(s) = \\begin{cases} 
+      \\text{Utility}(s) & \\text{if } \\text{Terminal-Test}(s) \\\\
+      \\max_{a \\in \\text{Actions}(s)} V(\\text{Result}(s, a)) & \\text{if } \\text{Player}(s) = \\text{MAX} \\\\
+      \\min_{a \\in \\text{Actions}(s)} V(\\text{Result}(s, a)) & \\text{if } \\text{Player}(s) = \\text{MIN}
+      \\end{cases}
+      $$
+      <div class="formula-label">Equation 3.1: The Minimax Value Function</div>
+    </div>
+
+    <p>
+      A full minimax traversal over a game tree with branching factor \\(b\\) and maximum depth \\(m\\) requires \\(O(b^m)\\) time and \\(O(bm)\\) memory. In physical combat with a 40-millisecond cycle deadline, searching to terminal depth is impossible. The engine must truncate search at a fixed cutoff depth \\(d\\) and apply a linear weighted evaluation function \\(V_{\\text{eval}}(s) = f(\\mathbf{w})\\):
+    </p>
+
+    <div class="math-block">
+      $$
+      V_{\\text{eval}}(s) = f(\\mathbf{w}) = \\mathbf{w}^T \\mathbf{f}(s) = \\sum_{i=1}^{k} w_i f_i(s) = w_1 (\\text{Intruder Distance}) + w_2 (\\text{Turret Line-of-Sight}) + w_3 (\\text{Ammunition Reserve})
+      $$
+      <div class="formula-label">Equation 3.2: Linear Weighted Evaluation Function for Real-Time Cutoff</div>
+    </div>
+
+    <div class="definition-box">
+      <div class="definition-title">Mathematical Formulation of Alpha-Beta Pruning</div>
+      <p>
+        Alpha-Beta pruning computes the exact minimax decision while pruning subtrees that cannot influence the final root value. The algorithm tracks two parameters along the search path:
+      </p>
+      <ul>
+        <li><strong>\\(\\alpha\\):</strong> The value of the best (highest-value) choice found so far along the path for \\(\\text{MAX}\\). Initialized to \\(-\\infty\\).</li>
+        <li><strong>\\(\\beta\\):</strong> The value of the best (lowest-value) choice found so far along the path for \\(\\text{MIN}\\). Initialized to \\(+\\infty\\).</li>
+      </ul>
+      <p>
+        <strong>Pruning Condition:</strong> At any point during tree traversal, whenever:
+      </p>
+      <div class="math-block">
+      $$
+      \\alpha \\ge \\beta
+      $$
+    </div>
+      <p>
+        the remaining child branches of the current node are pruned immediately.
+      </p>
+      <p>
+        <em>Proof:</em> Consider a \\(\\text{MIN}\\) node \\(n\\) where \\(v \\le \\alpha\\). The parent \\(\\text{MAX}\\) ancestor already has an alternative path guaranteeing a payoff of at least \\(\\alpha\\). Because \\(n\\) is controlled by \\(\\text{MIN}\\), its value can only decrease further as remaining children are evaluated. Therefore, \\(\\text{MAX}\\) will never choose the branch leading to \\(n\\). Exploring further children of \\(n\\) cannot alter the decision at the parent, proving the pruning is strictly conservative and sound.
+      </p>
+      <p>
+        <strong>Pruning Efficiency:</strong> With arbitrary move ordering, alpha-beta examines \\(O(b^{3m/4})\\) nodes. Under <em>perfect move ordering</em> (where the best move is always evaluated first), time complexity drops to:
+      </p>
+      <div class="math-block">
+      $$
+      O(b^{m/2})
+      $$
+    </div>
+      <p>
+        This doubles the effective search depth achievable within the same compute time budget.
+      </p>
+    </div>
+
+    <p>
+      When the environment includes stochastic elements (such as debris deflection, turret jamming, or venting atmospheric gas), the Expectimax algorithm replaces deterministic \\(\\text{MIN}\\) nodes with chance nodes:
+    </p>
+
+    <div class="math-block">
+      $$
+      V_{\\text{Expectimax}}(s) = \\sum_{s'} P(s' \\mid s, a) V_{\\text{Expectimax}}(s')
+      $$
+      <div class="formula-label">Equation 3.3: Expectimax Formulation over Chance Nodes</div>
+    </div>
+
+    <p>
+      Unlike Minimax, which is invariant to positive monotonic transformations of the evaluation function, Expectimax values depend strictly on positive affine transformations: \\(U'(s) = c_1 U(s) + c_2\\) where \\(c_1 > 0\\). Non-linear scaling distorts expected values, altering the resulting physical actions.
+    </p>
+  </div>
+
+  <!-- 3. Algorithmic Execution / Pseudo-code -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 3.3</span> Algorithmic Execution &amp; Pseudo-code</h3>
+    
+    <p>
+      The sentry fire-control system executes depth-limited alpha-beta pruning. It prioritizes actions using move ordering heuristics, ordering target tracking solutions by angular displacement from the turret central bore axis.
+    </p>
+
+    <div class="code-container">
+      <div class="code-header">
+        <span class="code-lang">Algorithm 3.1: Alpha-Beta Pruning with Depth Cutoff</span>
+        <span>Target: Sentry Fire-Control System</span>
+      </div>
+      <pre><code>function ALPHA_BETA_SEARCH(state, max_depth):
+    alpha = -INFINITY
+    beta = +INFINITY
+    best_action = null
+    best_val = -INFINITY
+    
+    // Order moves to maximize pruning efficiency
+    actions = ORDER_ACTIONS(state, state.get_actions(player=MAX))
+    
+    for each action in actions:
+        next_state = state.result(action)
+        val = MIN_VALUE(next_state, alpha, beta, depth=1, max_depth)
+        if val &gt; best_val:
+            best_val = val
+            best_action = action
+        alpha = max(alpha, best_val)
+        
+    return best_action
+
+function MAX_VALUE(state, alpha, beta, depth, max_depth):
+    if state.is_terminal() or depth &gt;= max_depth:
+        return EVALUATION_FUNCTION(state)
+        
+    v = -INFINITY
+    actions = ORDER_ACTIONS(state, state.get_actions(player=MAX))
+    
+    for each action in actions:
+        next_state = state.result(action)
+        v = max(v, MIN_VALUE(next_state, alpha, beta, depth + 1, max_depth))
+        if v &gt;= beta:
+            return v // Beta cutoff: MIN will avoid this branch
+        alpha = max(alpha, v)
+    return v
+
+function MIN_VALUE(state, alpha, beta, depth, max_depth):
+    if state.is_terminal() or depth &gt;= max_depth:
+        return EVALUATION_FUNCTION(state)
+        
+    v = +INFINITY
+    actions = ORDER_ACTIONS(state, state.get_actions(player=MIN))
+    
+    for each action in actions:
+        next_state = state.result(action)
+        v = min(v, MAX_VALUE(next_state, alpha, beta, depth + 1, max_depth))
+        if v &lt;= alpha:
+            return v // Alpha cutoff: MAX will avoid this branch
+        beta = min(beta, v)
+    return v</code></pre>
+    </div>
+
+    <div class="specs-table-wrapper">
+      <table class="specs-table">
+        <thead>
+          <tr>
+            <th>Search Algorithm</th>
+            <th>Search Depth Achievable (40 ms budget)</th>
+            <th>Node Expansions at \\(b=4, d=4\\)</th>
+            <th>Pruning Savings</th>
+            <th>Optimality Guarantee</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Standard Minimax</strong></td>
+            <td>Depth 2 to 3</td>
+            <td>341 nodes</td>
+            <td>0%</td>
+            <td>Optimal against optimal adversary</td>
+          </tr>
+          <tr>
+            <td><strong>Alpha-Beta (Random Ordering)</strong></td>
+            <td>Depth 3 to 4</td>
+            <td>~140 nodes</td>
+            <td>~58% reduction</td>
+            <td>Exact match with Minimax</td>
+          </tr>
+          <tr>
+            <td><strong>Alpha-Beta (Optimal Move Ordering)</strong></td>
+            <td>Depth 4 to 6</td>
+            <td>~31 nodes</td>
+            <td>~91% reduction</td>
+            <td>Exact match with Minimax</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      In physical robotics deployments, the fire-control loop must incorporate physical actuator dynamics. Turret drive motors operate at a maximum slew rate of 180 degrees per second. If the algorithm selects a tactical aim point requiring 90 degrees of travel, the transition latency is 500 ms. Move generation must therefore penalize high-angle motor travel to avoid ballistic latency lag during combat.
+    </p>
+      <figure class="diagram-frame">
+      <div class="diagram-header">
+        <span class="diagram-id">DIAGRAM 3.1 // ALPHA-BETA GAME TREE</span>
+        <span>SPEC-MINIMAX-CUTOFF // BOUND: $\alpha \ge \beta$</span>
+      </div>
+      <div class="diagram-viewport">
+        <img class="diagram-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKW4txBdzaxOnJaFpZoe7tSzxYgt-5PMAO246dS2vLTVl6_v2gm47_RW33&s=10" alt="Minimax game tree with active alpha-beta pruning bounds and cutoff evaluations." width="520" height="260" loading="lazy">
+      </div>
+      <figcaption class="diagram-caption">
+        <strong>Figure 3.1:</strong> Minimax adversarial game tree with active alpha-beta pruning cutoffs. Branches where the current node value violates the parent bound ($\alpha \ge \beta$) are discarded immediately without evaluating child subtrees, reducing effective branching factor from $O(b^m)$ to $O(b^{m/2})$ under optimal move ordering (Russell &amp; Norvig, Ch. 5).
+      </figcaption>
+    </figure>
+  </div>
+
+  <!-- 4. Interactive Simulation Module -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 3.4</span> Interactive Simulation Module: Adversarial Defense Tree Visualizer</h3>
+    <p>
+      The interactive visualizer below renders the adversarial game tree for Cargo Bay 3 defense. Green nodes represent sentry \\(\\text{MAX}\\) decisions; amber nodes represent intruder \\(\\text{MIN}\\) decisions. Toggle between Standard Minimax and Alpha-Beta Pruning to observe how branch pruning slashes node evaluations while preserving optimal tactical outcomes.
+    </p>
+
+    <div class="sim-container">
+      <div class="sim-header">
+        <span class="sim-title">Simulation 3.1: Sentry Turret Adversarial Game Tree</span>
+        <span class="sim-status">TACTICAL TRACKING ACTIVE</span>
+      </div>
+      <div class="sim-body">
+        <div class="sim-controls">
+          <div class="sim-control-group">
+            <label for="sim3-algo-select">Pruning Mode:</label>
+            <select id="sim3-algo-select" class="sim-select">
+              <option value="alphabeta">Alpha-Beta Pruning (Optimal Cutoffs)</option>
+              <option value="minimax">Standard Minimax (Exhaustive)</option>
+            </select>
+          </div>
+          <div class="sim-control-group">
+            <label for="sim3-depth-select">Search Depth:</label>
+            <select id="sim3-depth-select" class="sim-select">
+              <option value="2">2 Ply (Shallow)</option>
+              <option value="3" selected>3 Ply (Nominal)</option>
+              <option value="4">4 Ply (Deep)</option>
+            </select>
+          </div>
+          <button id="sim3-btn-regen" class="btn-primary">Regenerate Tree</button>
+        </div>
+
+        <div class="sim-canvas-wrapper" id="sim3-container" style="position: relative; overflow: visible;">
+          <svg id="sim3-svg" viewBox="0 0 640 320" preserveAspectRatio="xMidYMid meet" class="sim-tree-svg" aria-label="Interactive Adversarial Game Tree SVG"></svg>
+          <canvas id="sim3-canvas" width="640" height="320" style="display: none;" aria-hidden="true"></canvas>
+          <div id="sim3-tooltip" class="sim-tree-tooltip" role="tooltip" aria-hidden="true"></div>
+        </div>
+
+        <div class="sim-telemetry">
+          <div class="telemetry-item">
+            <span class="telemetry-label">Evaluated Nodes</span>
+            <span id="sim3-stat-evaluated" class="telemetry-value">--</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Pruned Nodes (Savings)</span>
+            <span id="sim3-stat-pruned" class="telemetry-value">--</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Root Minimax Value</span>
+            <span id="sim3-stat-score" class="telemetry-value">--</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Cycle Time Margin</span>
+            <span class="telemetry-value">38.4 ms (&lt; 40 ms)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Academic Post-Mortem & Citations -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 3.5</span> Academic Post-Mortem &amp; Citations</h3>
+    <div class="citations-box">
+      <p>
+        The game-theoretic principles governing sentry engagement derive from foundational research in adversarial algorithms and computational ethics:
+      </p>
+      <ul class="citation-list">
+        <li class="citation-item">
+          <strong>Knuth, D. E., &amp; Moore, R. W. (1975).</strong> An Analysis of Alpha-Beta Pruning. <em>Artificial Intelligence</em>, 6(4), 293-326. [Proved mathematical correctness and asymptotic optimality bounds for alpha-beta cutoffs under optimal move ordering].
+        </li>
+        <li class="citation-item">
+          <strong>Shannon, C. E. (1950).</strong> Programming a Computer for Playing Chess. <em>The London, Edinburgh, and Dublin Philosophical Magazine and Journal of Science</em>, 41(314), 256-275. [Established minimax game trees, position evaluation functions, and the horizon effect in computational game theory].
+        </li>
+        <li class="citation-item">
+          <strong>Russell, S. J., &amp; Norvig, P. (2020).</strong> <em>Artificial Intelligence: A Modern Approach</em> (4th ed.). Pearson. Chapter 5 ("Adversarial Search and Games"). [Comprehensive derivations of alpha-beta bounds, transposition tables, and expectimax chance formulations].
+        </li>
+        <li class="citation-item">
+          <strong>Zerilli, J. (2021).</strong> <em>A Citizen's Guide to Artificial Intelligence</em>. MIT Press. Chapter 4 ("Military AI and Lethal Autonomous Weapons Systems"). [Examined ethical boundaries and verification mandates when delegating lethal kinetic authority to real-time algorithmic search systems].
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+      
+<section class="manual-chapter" id="chapter-4">
+  <div class="chapter-directive">
+    <div class="directive-meta-bar">
+      <span>SUBSYSTEM PROTOCOL // RCT-RL-04</span>
+      <span class="declassified-stamp">SEC-CLR: THERMAL EMERGENCY // COOLANT ENGAGE</span>
+      <span>SYSTEM STATUS: CORE OSCILLATION</span>
+    </div>
+    <h2 class="chapter-title">Chapter 4: Reactor Temperature Control &amp; Drive Dynamics: Markov Decision Processes &amp; Reinforcement Learning</h2>
+    <p class="chapter-subtitle">Sequential decision-making under uncertainty, Bellman optimality formulations, value iteration convergence, and model-free temporal difference Q-learning for thermal regulation.</p>
+    <table class="specs-table">
+      <thead>
+        <tr>
+          <th>Subsystem</th>
+          <th>Control Protocol</th>
+          <th>Convergence Tolerance</th>
+          <th>Discount Factor</th>
+          <th>Physical Actuator</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Tokamak Cryo-Cooling System</td>
+          <td>Modbus-RTU 115.2 kbps</td>
+          <td>epsilon = 0.001</td>
+          <td>gamma = 0.95</td>
+          <td>Cryo-Fluid Injector Valves &amp; Bypass Pumps</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 1. System Emergency Briefing -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 4.1</span> System Emergency Briefing</h3>
+    <div class="briefing-callout">
+      <div class="briefing-header">
+        <span class="briefing-tag">Incident Report: Tokamak Core Thermal Runaway</span>
+        <span class="briefing-status">STATUS: MAGNETIC CONFINEMENT DRIFT // CORE TEMP: 1.28e8 K</span>
+      </div>
+      <p class="briefing-text">
+        Magnetic confinement fields in the primary deuterium-tritium fusion tokamak have suffered harmonic instability following auxiliary power drops. Plasma temperature is oscillating unpredictably across five magnetic containment rings. Autonomous cryo-coolant injection valves must be manipulated continuously to steer core thermals back to the stable baseline without causing thermal quench shock.
+      </p>
+      <p class="briefing-text">
+        Fluid coolant delivery exhibits physical thermal inertia: commanding a valve actuator produces delayed thermal changes 3 to 8 seconds later. Transition dynamics are stochastic due to turbulent plasma eddies. The engineering system must deploy Markov Decision Process formulations and Reinforcement Learning to discover optimal valve policies before core breach containment failure occurs.
+      </p>
+    </div>
+  </div>
+
+  <!-- 2. Theoretical Foundation & Mathematical Formulation -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 4.2</span> Theoretical Foundation &amp; Mathematical Formulation</h3>
+    
+    <p>
+      When an agent acts in a stochastic environment where actions have uncertain outcomes and consequences play out over extended time horizons, decision-making is formalized through the mathematical framework of Markov Decision Processes.
+    </p>
+
+    <div class="definition-box">
+      <div class="definition-title">Formal Markov Decision Process (MDP) Definition</div>
+      <p>
+        A discounted Markov Decision Process is defined as a 5-tuple \(\langle S, A, T, R, \gamma \rangle\):
+      </p>
+      <ul>
+        <li><strong>State Space \(S\):</strong> The set of all valid environmental states. For the tokamak reactor: discretized temperature-pressure vectors across grid sectors.</li>
+        <li><strong>Action Space \(A\):</strong> The set of executable control actions, \(A = \{\text{Inject Vent}, \text{Increase Flow}, \text{Decrease Flow}, \text{Bypass Loop}\}\).</li>
+        <li><strong>Transition Model \(T(s, a, s') = P(s' \mid s, a)\):</strong> The conditional probability that executing action \(a\) in state \(s\) leads to state \(s'\). Satisfies \(\sum_{s' \in S} T(s, a, s') = 1\).</li>
+        <li><strong>Reward Function \(R(s, a, s')\):</strong> The real-valued scalar feedback received upon transitioning. Stable thermal baseline yields \(+10\); plasma containment breach yields \(-100\); step energy cost is \(-0.1\).</li>
+        <li><strong>Discount Factor \(\gamma \in [0, 1)\):</strong> Models the preference for immediate rewards over deferred rewards, ensuring mathematical convergence over infinite horizons:</li>
+      </ul>
+      <div class="math-block">
+      $$
+      G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}
+      $$
+      <div class="formula-label">Equation 4.1: Discounted Cumulative Return from Time t</div>
+    </div>
+    </div>
+
+    <figure class="diagram-frame">
+      <div class="diagram-header">
+        <span class="diagram-id">DIAGRAM 4.1 // MDP STATE-ACTION TRANSITIONS</span>
+        <span>SPEC-MDP-BELLMAN // PROBABILISTIC DYNAMICS</span>
+      </div>
+      <div class="diagram-viewport">
+        <img class="diagram-img" src="https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcQk6HvxsXERwrIzbdrm2ZUxyg4a7fwOQYe0Xk65JF7UUIhoYgWsEAB0E21z42muC7zNdkkpZgYreQl_70I" alt="Markov Decision Process state-action transition automaton with transition probabilities and reward functions." width="500" height="270" loading="lazy">
+      </div>
+      <figcaption class="diagram-caption">
+        <strong>Figure 4.1:</strong> Markov Decision Process state-action transition automaton. Control actions \(a \in A\) induce stochastic transitions across reactor states \(s \in S\) with probability \(P(s' \mid s, a)\) and immediate feedback \(R(s, a, s')\), governed by the Bellman optimality principle (Russell &amp; Norvig, Ch. 17).
+      </figcaption>
+    </figure>
+
+    <p>
+      The foundational assumption enabling tractable dynamic programming is the <strong>Markov Property</strong>: future states depend solely on the current state and action, independent of the historical percept trajectory:
+    </p>
+
+    <div class="math-block">
+      $$
+      P(S_{t+1} = s' \mid S_t = s_t, A_t = a_t, S_{t-1} = s_{t-1}, \dots, S_0 = s_0) = P(S_{t+1} = s' \mid S_t = s_t, A_t = a_t)
+      $$
+      <div class="formula-label">Equation 4.2: The First-Order Markov Property</div>
+    </div>
+
+    <p>
+      An agent behavior is specified by a policy \(\pi(a \mid s)\). The state-value function \(V^\pi(s)\) quantifies expected return from state \(s\) under policy \(\pi\), while the action-value function \(Q^\pi(s, a)\) quantifies the expected return of taking action \(a\) in state \(s\) before following \(\pi\).
+    </p>
+
+    <div class="definition-box">
+      <div class="definition-title">Bellman Expectation &amp; Optimality Equations</div>
+      <p>
+        The Bellman Expectation Equation decomposes the value of a state recursively into immediate reward plus discounted expected future value:
+      </p>
+      <div class="math-block">
+      $$
+      V^\pi(s) = \sum_{a \in A} \pi(a \mid s) \sum_{s' \in S} T(s, a, s') \left[ R(s, a, s') + \gamma V^\pi(s') \right]
+      $$
+    </div>
+      <p>
+        The optimal policy \(\pi^*\) achieves the maximal value function across all states: \(V^*(s) = \max_\pi V^\pi(s)\). The Bellman Optimality Equations express the non-linear relationship that must hold at equilibrium:
+      </p>
+      <div class="math-block">
+      $$
+      V^*(s) = \max_{a \in A} \sum_{s' \in S} T(s, a, s') \left[ R(s, a, s') + \gamma V^*(s') \right]
+      $$
+    </div>
+      <div class="math-block">
+      $$
+      Q^*(s, a) = \sum_{s' \in S} T(s, a, s') \left[ R(s, a, s') + \gamma \max_{a' \in A} Q^*(s', a') \right]
+      $$
+    </div>
+      <p>
+        Once \(Q^*(s, a)\) is known, the optimal deterministic policy is extracted greedily: \(\pi^*(s) = \arg\max_a Q^*(s, a)\).
+      </p>
+    </div>
+
+    <p>
+      When the environmental transition dynamics \(T\) and reward function \(R\) are known, <strong>Value Iteration</strong> solves for \(V^*\) through fixed-point iteration:
+    </p>
+
+    <div class="math-block">
+      $$
+      V_{k+1}(s) \leftarrow \max_{a \in A} \sum_{s' \in S} T(s, a, s') \left[ R(s, a, s') + \gamma V_k(s') \right]
+      $$
+      <div class="formula-label">Equation 4.3: Value Iteration Update Rule</div>
+    </div>
+
+    <p>
+      By the Banach Fixed-Point Theorem, the Bellman backup operator is a \(\gamma\)-contraction mapping in the \(L_\infty\) norm: \(\|\mathcal{T}V - \mathcal{T}U\|_\infty \le \gamma \|V - U\|_\infty\). Because \(\gamma < 1\), value iteration converges to a unique fixed point regardless of initialization:
+    </p>
+
+    <div class="math-block">
+      $$
+      \|V_{k+1} - V^*\|_\infty \le \frac{2\gamma}{1 - \gamma} \|V_k - V_{k-1}\|_\infty
+      $$
+      <div class="formula-label">Equation 4.4: Contraction Mapping Error Bound</div>
+    </div>
+
+    <div class="definition-box">
+      <div class="definition-title">Model-Free Reinforcement Learning: Temporal Difference Q-Learning</div>
+      <p>
+        When plasma dynamics are too turbulent to model explicitly, the transition probabilities \(T(s, a, s')\) are unknown. The agent must learn directly from experiential transitions \((s_t, a_t, r_{t+1}, s_{t+1})\).
+      </p>
+      <p>
+        Watkins Q-Learning is an <em>off-policy</em> Temporal Difference control algorithm. It updates the state-action value table by comparing the current estimate to a bootstrap target:
+      </p>
+      <div class="math-block">
+      $$
+      Q(S_t, A_t) \leftarrow Q(S_t, A_t) + \alpha \left[ R_{t+1} + \gamma \max_{a'} Q(S_{t+1}, a') - Q(S_t, A_t) \right]
+      $$
+    </div>
+      <p>
+        Where:
+      </p>
+      <ul>
+        <li>\(\alpha \in (0, 1]\) is the learning rate parameter.</li>
+        <li>\(\delta_t = R_{t+1} + \gamma \max_{a'} Q(S_{t+1}, a') - Q(S_t, A_t)\) is the Temporal Difference (TD) error.</li>
+        <li>\(R_{t+1} + \gamma \max_{a'} Q(S_{t+1}, a')\) is the target value.</li>
+      </ul>
+      <p>
+        <strong>Exploration vs. Exploitation:</strong> To discover high-reward states while refining known policies, the agent uses an \(\epsilon\)-greedy behavioral policy: with probability \(1 - \epsilon\), it selects \(\arg\max_a Q(s, a)\); with probability \(\epsilon\), it selects a random exploratory action.
+      </p>
+    </div>
+  </div>
+
+  <!-- 3. Algorithmic Execution / Pseudo-code -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 4.3</span> Algorithmic Execution &amp; Pseudo-code</h3>
+    
+    <p>
+      The embedded reactor supervisory controller executes Tabular Q-Learning across the 5x5 discretized thermal manifold. A safety filter overrides exploratory actions if the predicted step violates immediate magnetic thermal tolerances.
+    </p>
+
+    <div class="code-container">
+      <div class="code-header">
+        <span class="code-lang">Algorithm 4.1: Tabular Q-Learning with Epsilon-Greedy Exploration</span>
+        <span>Target: Tokamak Coolant Actuator</span>
+      </div>
+      <pre><code>function Q_LEARNING_REACTOR_CONTROLLER(env, alpha, gamma, epsilon_init, episodes):
+    // Initialize Q-table to zero for all state-action pairs
+    Q = HashMap(default=0.0)
+    epsilon = epsilon_init
+    
+    for episode from 1 to episodes:
+        state = env.reset()
+        is_terminal = false
+        
+        while not is_terminal:
+            // Epsilon-greedy action selection
+            if RANDOM_UNIFORM(0, 1) &lt; epsilon:
+                action = env.random_action() // Explore
+            else:
+                action = ARGMAX_ACTION(Q, state) // Exploit
+                
+            // Execute action on physical coolant valves
+            next_state, reward, is_terminal = env.step(action)
+            
+            // Calculate Bellman optimality bootstrap target
+            max_next_q = is_terminal ? 0.0 : MAX_Q_VALUE(Q, next_state)
+            td_target = reward + gamma * max_next_q
+            td_error = td_target - Q[state, action]
+            
+            // Q-table update
+            Q[state, action] = Q[state, action] + alpha * td_error
+            
+            state = next_state
+            
+        // Decay exploration rate over training episodes
+        epsilon = max(0.01, epsilon * 0.995)
+        
+    return EXTRACT_POLICY(Q)
+
+function EXTRACT_POLICY(Q):
+    policy = HashMap()
+    for state in ALL_STATES:
+        policy[state] = ARGMAX_ACTION(Q, state)
+    return policy</code></pre>
+    </div>
+
+    <div class="specs-table-wrapper">
+      <table class="specs-table">
+        <thead>
+          <tr>
+            <th>Characteristic</th>
+            <th>Value Iteration (Dynamic Programming)</th>
+            <th>Q-Learning (Model-Free RL)</th>
+            <th>SARSA (On-Policy TD)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Environment Knowledge</strong></td>
+            <td>Requires explicit \(T(s, a, s')\) and \(R\)</td>
+            <td>Model-free (samples from interaction)</td>
+            <td>Model-free (samples from interaction)</td>
+          </tr>
+          <tr>
+            <td><strong>Policy Category</strong></td>
+            <td>Exact Dynamic Planning</td>
+            <td>Off-policy (learns $Q^*$ regardless of behavior)</td>
+            <td>On-policy (learns value of behavior policy $\pi_\epsilon$)</td>
+          </tr>
+          <tr>
+            <td><strong>Convergence Requirement</strong></td>
+            <td>Contraction mapping in $L_\infty$ norm</td>
+            <td>Robbins-Monro conditions $\sum \alpha_t = \infty, \sum \alpha_t^2 < \infty$</td>
+            <td>All state-action pairs visited infinitely often</td>
+          </tr>
+          <tr>
+            <td><strong>Physical AI Safety Risk</strong></td>
+            <td>Zero risk in simulation, requires accurate model</td>
+            <td>Risk of exploring catastrophic states (core meltdown)</td>
+            <td>Safer exploration along margins, avoids high-variance edges</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      In Physical AI applications, pure random exploration (\(\epsilon\)-greedy without guardrails) is hazardous: choosing an exploratory action that dumps cryo-coolant into a superheated vacuum vessel induces destructive mechanical stress. Safe RL architectures constrain the action space using control barrier functions (CBFs), ensuring the agent policy remains within safe operational envelopes.
+    </p>
+  </div>
+
+  <!-- 4. Interactive Simulation Module -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 4.4</span> Interactive Simulation Module: Reactor Thermal Grid-World</h3>
+    <p>
+      The interactive simulation below displays the 5x5 thermal grid of the Daedalus fusion manifold. The green cell is the cryo-vent relief target (+10 reward); red cells represent catastrophic plasma hotspots (-10 penalty). Toggle between exact Value Iteration and live Q-Learning, adjust the exploration parameter \(\epsilon\), and watch the learned state values converge.
+    </p>
+
+    <div class="sim-container">
+      <div class="sim-header">
+        <span class="sim-title">Simulation 4.1: Tokamak Coolant Manifold Grid-World RL</span>
+        <span class="sim-status">THERMAL DYNAMICS ACTIVE</span>
+      </div>
+      <div class="sim-body">
+        <div class="sim-controls">
+          <div class="sim-control-group">
+            <label for="sim4-algo-select">Algorithm:</label>
+            <select id="sim4-algo-select" class="sim-select">
+              <option value="qlearning">Q-Learning (Model-Free RL)</option>
+              <option value="value_iteration">Value Iteration (Exact Bellman DP)</option>
+            </select>
+          </div>
+          <div class="sim-control-group">
+            <label for="sim4-slider-eps">Exploration (\(\epsilon\)):</label>
+            <input type="range" id="sim4-slider-eps" min="0.0" max="0.8" step="0.05" value="0.2" class="sim-slider" style="width: 80px;">
+            <span id="sim4-eps-val" style="font-family: var(--font-mono); font-size: 0.8rem;">0.20</span>
+          </div>
+          <button id="sim4-btn-run" class="btn-primary">Train (100 Ep)</button>
+          <button id="sim4-btn-step" class="btn-secondary">Step Episode</button>
+          <button id="sim4-btn-reset" class="btn-secondary">Reset Q-Table</button>
+        </div>
+
+        <div class="sim-canvas-wrapper">
+          <canvas id="sim4-canvas" width="440" height="440" aria-label="Interactive 5 by 5 Grid World RL Canvas"></canvas>
+        </div>
+
+        <div class="sim-telemetry">
+          <div class="telemetry-item">
+            <span class="telemetry-label">Training Episodes</span>
+            <span id="sim4-stat-episodes" class="telemetry-value">0</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Cumulative Reward</span>
+            <span id="sim4-stat-reward" class="telemetry-value">0.0</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Learning Rate (\(\alpha\))</span>
+            <span class="telemetry-value">0.20</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Discount (\(\gamma\))</span>
+            <span class="telemetry-value">0.90</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Academic Post-Mortem & Citations -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 4.5</span> Academic Post-Mortem &amp; Citations</h3>
+    <div class="citations-box">
+      <p>
+        The reinforcement learning and dynamic programming formulations employed in the thermal stabilization engine derive from foundational mathematical literature:
+      </p>
+      <ul class="citation-list">
+        <li class="citation-item">
+          <strong>Bellman, R. (1957).</strong> <em>Dynamic Programming</em>. Princeton University Press. [Established the principle of optimality and formulated functional equations for sequential multi-stage decision processes].
+        </li>
+        <li class="citation-item">
+          <strong>Watkins, C. J. C. H., &amp; Dayan, P. (1992).</strong> Q-learning. <em>Machine Learning</em>, 8(3), 279-292. [Formulated the off-policy temporal difference Q-learning algorithm and provided rigorous mathematical proofs for asymptotic convergence].
+        </li>
+        <li class="citation-item">
+          <strong>Sutton, R. S., &amp; Barto, A. G. (2018).</strong> <em>Reinforcement Learning: An Introduction</em> (2nd ed.). MIT Press. Chapter 3 ("Finite Markov Decision Processes") and Chapter 6 ("Temporal-Difference Learning"). [Definitive reference for value functions, Bellman equations, and SARSA versus Q-learning trade-offs].
+        </li>
+        <li class="citation-item">
+          <strong>Louwerse, M. M. (2021).</strong> <em>Understanding Artificial Minds through Human Minds</em>. Routledge. Chapter 6 ("Learning from Consequences and Feedback"). [Explored parallels between reinforcement learning reward signals and biological dopamine pathways, contrasting human risk-aversion with algorithmic exploration].
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+      
+<section class="manual-chapter" id="chapter-5">
+  <div class="chapter-directive">
+    <div class="directive-meta-bar">
+      <span>SUBSYSTEM PROTOCOL // SENS-HMM-05</span>
+      <span class="declassified-stamp">SEC-CLR: NOISE RECOVERY // PROBABILISTIC FILTER</span>
+      <span>SYSTEM STATUS: SENSOR NOISE ACTIVE</span>
+    </div>
+    <h2 class="chapter-title">Chapter 5: Structural Damage Localization &amp; Sequential Sensor Inference: Bayesian Networks &amp; Hidden Markov Models</h2>
+    <p class="chapter-subtitle">Axiomatic probability foundations, Bayesian network inference, conditional independence, and recursive forward filtering over noisy sequential sensor streams.</p>
+    <table class="specs-table">
+      <thead>
+        <tr>
+          <th>Subsystem</th>
+          <th>Sensor Bus</th>
+          <th>Noise Rate (SNR)</th>
+          <th>Inference Model</th>
+          <th>Physical Actuator</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Service Conduit Sensor Array</td>
+          <td>MIL-STD-1553B 1.0 Mbps</td>
+          <td>SNR -6.4 dB (25% False Alarm)</td>
+          <td>HMM Recursive Forward Filter</td>
+          <td>Automated Bulkhead Sealing Hatches</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 1. System Emergency Briefing -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 5.1</span> System Emergency Briefing</h3>
+    <div class="briefing-callout">
+      <div class="briefing-header">
+        <span class="briefing-tag">Incident Report: Hidden Pressure Bleed in Service Conduits</span>
+        <span class="briefing-status">STATUS: SUB-DECK INTEGRITY DEGRADED // NOISE SNR: -6.4 dB</span>
+      </div>
+      <p class="briefing-text">
+        Acoustic transducers along the primary service backbone report high-frequency acoustic hiss indicative of an internal high-pressure coolant line fracture. The service conduit passes through six contiguous physical bulkheads inaccessible to human crew. Structural damage cannot be observed directly because sensors behind bulkheads are uncalibrated and suffer high electronic noise from cosmic radiation.
+      </p>
+      <p class="briefing-text">
+        Individual acoustic and scintillation sensors report false alarms at rates exceeding 25%. A single raw sensor ping cannot justify commanding emergency fire-suppression foam injection, which would contaminate non-damaged electronic bays. The ship tracking system must maintain a sequential probabilistic belief state, updating state distributions recursively using Hidden Markov Model forward filtering to pinpoint the true physical fracture location.
+      </p>
+    </div>
+  </div>
+
+  <!-- 2. Theoretical Foundation & Mathematical Formulation -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 5.2</span> Theoretical Foundation &amp; Mathematical Formulation</h3>
+    
+    <p>
+      Classical propositional and first-order logic fail in physical robotics due to the qualification problem: the exhaustive list of antecedents required to guarantee an outcome is intractable to formalize. Physical environments are governed by uncertainty arising from partial observability, noisy sensors, non-deterministic actuators, and computational limits.
+    </p>
+
+    <div class="definition-box">
+      <div class="definition-title">Axioms of Probability &amp; Bayes' Rule</div>
+      <p>
+        Probability theory formalizes degrees of belief over propositions. The Kolmogorov axioms establish the mathematical foundation:
+      </p>
+      <ol>
+        <li>\(\forall A, \quad 0 \le P(A) \le 1\)</li>
+        <li>\(P(\Omega) = 1\), where \(\Omega\) is the sample space.</li>
+        <li>For mutually exclusive events \(A\) and \(B\): \(P(A \cup B) = P(A) + P(B)\).</li>
+      </ol>
+      <p>
+        Conditional probability is defined as \(P(A \mid B) = \frac{P(A \cap B)}{P(B)}\) for \(P(B) > 0\). The Product Rule yields the Joint Probability Distribution: \(P(A, B) = P(A \mid B) P(B) = P(B \mid A) P(A)\). Equating these expressions yields <strong>Bayes' Rule</strong>:
+      </p>
+      <div class="math-block">
+      $$
+      P(\text{Cause} \mid \text{Effect}) = \frac{P(\text{Effect} \mid \text{Cause}) P(\text{Cause})}{P(\text{Effect})}
+      $$
+      <div class="formula-label">Equation 5.1: Bayes' Rule for Diagnostic Inference</div>
+    </div>
+      <p>
+        Using the Law of Total Probability to expand the marginal denominator \(P(E) = \sum_c P(E \mid C = c) P(C = c)\), Bayes' Rule in normalized form is written as:
+      </p>
+      <div class="math-block">
+      $$
+      P(C \mid E) = \alpha P(E \mid C) P(C)
+      $$
+      <div class="formula-label">Equation 5.2: Normalized Posterior Probability Formulation</div>
+    </div>
+      <p>
+        Where \(\alpha = 1 / \sum_c P(E \mid c) P(c)\) is a normalization constant ensuring the posterior distribution sums to 1.
+      </p>
+    </div>
+
+    <p>
+      Two variables \(X\) and \(Y\) are conditionally independent given \(Z\) if:
+    </p>
+
+    <div class="math-block">
+      $$
+      P(X, Y \mid Z) = P(X \mid Z) P(Y \mid Z) \iff P(X \mid Y, Z) = P(X \mid Z)
+      $$
+      <div class="formula-label">Equation 5.3: Conditional Independence Relation</div>
+    </div>
+
+    <p>
+      A <strong>Bayesian Network</strong> is a Directed Acyclic Graph (DAG) whose nodes represent random variables and whose directed edges represent direct probabilistic dependencies. Each node \(X_i\) is equipped with a Conditional Probability Table (CPT) specifying \(P(X_i \mid \text{Parents}(X_i))\). By exploiting conditional independence, the joint distribution factors into:
+    </p>
+
+    <div class="math-block">
+      $$
+      P(X_1, X_2, \dots, X_n) = \prod_{i=1}^{n} P(X_i \mid \text{Parents}(X_i))
+      $$
+      <div class="formula-label">Equation 5.4: Joint Distribution Factorization over Bayesian Networks</div>
+    </div>
+
+    <p>
+      Conditional independence is verified topologically through <strong>d-separation</strong> (directional separation). An undirected path between \(X\) and \(Y\) is blocked by evidence set \(E\) if the path contains:
+    </p>
+    <ul>
+      <li>A linear chain \(A \to B \to C\) or common cause \(A \leftarrow B \to C\), and \(B \in E\).</li>
+      <li>A collider / v-structure \(A \to B \leftarrow C\), and neither \(B\) nor any descendant of \(B\) is in \(E\). Observing a collider unblocks the path ("explaining away").</li>
+    </ul>
+
+    <figure class="diagram-frame">
+      <div class="diagram-header">
+        <span class="diagram-id">DIAGRAM 5.1 // BAYESIAN NETWORK DAG</span>
+        <span>SPEC-BAYES-CPT // FACTORIZED JOINT DISTRIBUTION</span>
+      </div>
+      <div class="diagram-viewport">
+        <img class="diagram-img" src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcTfV0NhgdwEK2DLdNzw-OavrKQyWhgG-hTFBFXYzjX1sVMiHnMLnqm1tUjLEzMYYg1-s2n0srjPqR_XZTc" alt="Directed Acyclic Graph factorizing joint distributions for noisy life-support sensors." width="480" height="250" loading="lazy">
+      </div>
+      <figcaption class="diagram-caption">
+        <strong>Figure 5.1:</strong> Directed Acyclic Graph (DAG) factorizing joint probability distributions over shipboard damage sensors. Nodes represent latent physical states and noisy acoustic readings, linked by conditional probability tables (CPTs) that exploit d-separation to enable scalable exact inference (Russell &amp; Norvig, Ch. 14).
+      </figcaption>
+    </figure>
+
+    <div class="definition-box">
+      <div class="definition-title">Hidden Markov Models (HMMs) &amp; The Forward Filtering Algorithm</div>
+      <p>
+        When physical variables evolve over time, we model the system as a Hidden Markov Model. Let \(X_t\) denote the unobservable true physical state at time step \(t\) (e.g., fracture in sector \(i \in \{1, \dots, 6\}\)), and \(E_t\) denote the noisy sensor observation at time \(t\).
+      </p>
+      <p>
+        The model satisfies two core independence assumptions:
+      </p>
+      <ul>
+        <li><strong>First-Order Markov State Transition:</strong> \(P(X_t \mid X_{0:t-1}) = P(X_t \mid X_{t-1})\).</li>
+        <li><strong>Sensor Markov Assumption:</strong> \(P(E_t \mid X_{0:t}, E_{1:t-1}) = P(E_t \mid X_t)\).</li>
+      </ul>
+      <p>
+        The primary task in real-time tracking is <strong>Filtering</strong>: computing the current belief state distribution \(P(X_t \mid e_{1:t})\) given the historical observation sequence \(e_{1:t} = (e_1, e_2, \dots, e_t)\).
+      </p>
+      <p>
+        <em>Mathematical Derivation:</em>
+      </p>
+      <div class="math-block">
+      $$
+      \begin{aligned}
+        P(X_t \mid e_{1:t}) &= P(X_t \mid e_t, e_{1:t-1}) \\
+        &= \alpha P(e_t \mid X_t, e_{1:t-1}) P(X_t \mid e_{1:t-1}) \quad \text{(by Bayes' Rule)} \\
+        &= \alpha P(e_t \mid X_t) P(X_t \mid e_{1:t-1}) \quad \text{(by Sensor Markov Assumption)}
+        \end{aligned}
+      $$
+    </div>
+      <p>
+        Expanding the one-step prediction term \(P(X_t \mid e_{1:t-1})\) by conditioning and marginalizing over the previous state \(x_{t-1}\):
+      </p>
+      <div class="math-block">
+      $$
+      P(X_t \mid e_{1:t-1}) = \sum_{x_{t-1}} P(X_t \mid x_{t-1}, e_{1:t-1}) P(x_{t-1} \mid e_{1:t-1}) = \sum_{x_{t-1}} P(X_t \mid x_{t-1}) P(x_{t-1} \mid e_{1:t-1})
+      $$
+    </div>
+      <p>
+        Substituting yields the canonical recursive <strong>Forward Filtering Equation</strong>:
+      </p>
+      <div class="math-block">
+      $$
+      P(X_t \mid e_{1:t}) = \alpha P(e_t \mid X_t) \sum_{x_{t-1}} P(X_t \mid x_{t-1}) P(x_{t-1} \mid e_{1:t-1})
+      $$
+      <div class="formula-label">Equation 5.5: Recursive Forward Filtering Algorithm</div>
+    </div>
+    </div>
+  </div>
+
+  <!-- 3. Algorithmic Execution / Pseudo-code -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 5.3</span> Algorithmic Execution &amp; Pseudo-code</h3>
+    
+    <p>
+      In matrix formulation, let \(\mathbf{f}_{1:t}\) be the belief probability vector of length \(N\). Let \(\mathbf{T}\) be the \(N \times N\) transition probability matrix where \(T_{ij} = P(X_t = j \mid X_{t-1} = i)\), and let \(\mathbf{O}_t\) be a diagonal observation matrix with entries \(O_{t,ii} = P(e_t \mid X_t = i)\). The forward step simplifies to:
+    </p>
+
+    <div class="math-block">
+      $$
+      \mathbf{f}_{1:t} = \alpha \mathbf{O}_t \mathbf{T}^T \mathbf{f}_{1:t-1}
+      $$
+      <div class="formula-label">Equation 5.6: Matrix Formulation of HMM Forward Filter</div>
+    </div>
+
+    <div class="code-container">
+      <div class="code-header">
+        <span class="code-lang">Algorithm 5.1: Matrix-Vector HMM Forward Tracking Filter</span>
+        <span>Target: Structural Sensor Hub</span>
+      </div>
+      <pre><code>function HMM_FORWARD_FILTER_STEP(belief_prev, observation, T_matrix, sensor_model):
+    // Step 1: Prediction step (Project physical dynamics through transition model)
+    // predicted[j] = sum_i T[i][j] * belief_prev[i]
+    predicted = MATRIX_VECTOR_MULTIPLY(TRANSPOSE(T_matrix), belief_prev)
+    
+    // Step 2: Update step (Weight by sensor likelihood of current evidence)
+    updated = Vector(length=NUM_SECTORS)
+    for j from 1 to NUM_SECTORS:
+        likelihood = sensor_model.get_probability(evidence=observation, state=j)
+        updated[j] = likelihood * predicted[j]
+        
+    // Step 3: Normalization step (Ensure probability vector sums to 1.0)
+    norm_constant = SUM(updated)
+    if norm_constant == 0:
+        return UNIFORM_DISTRIBUTION(NUM_SECTORS) // Sensor total dropout recovery
+        
+    belief_current = updated / norm_constant
+    return belief_current
+
+function VITERBI_DECODE(observations, T_matrix, sensor_model, initial_prior):
+    // Computes the most likely physical damage trajectory across all time steps
+    T = len(observations)
+    N = NUM_SECTORS
+    viterbi = Matrix(N, T)
+    backpointer = Matrix(N, T)
+    
+    // Initialization at t = 1
+    for i from 1 to N:
+        viterbi[i, 1] = initial_prior[i] * sensor_model.prob(observations[1], i)
+        backpointer[i, 1] = 0
+        
+    // Recursion over time
+    for t from 2 to T:
+        for j from 1 to N:
+            best_prev, best_idx = MAX_INDEX(viterbi[i, t-1] * T_matrix[i, j] for i in 1..N)
+            viterbi[j, t] = best_prev * sensor_model.prob(observations[t], j)
+            backpointer[j, t] = best_idx
+            
+    // Backtracking the most probable historical trajectory
+    best_path = Vector(length=T)
+    best_path[T] = ARGMAX(viterbi[j, T] for j in 1..N)
+    for t from T down to 2:
+        best_path[t-1] = backpointer[best_path[t], t]
+        
+    return best_path</code></pre>
+    </div>
+
+    <div class="specs-table-wrapper">
+      <table class="specs-table">
+        <thead>
+          <tr>
+            <th>Inference Task</th>
+            <th>Formal Target</th>
+            <th>Time Complexity per Step</th>
+            <th>Space Complexity</th>
+            <th>Operational Use Case</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Filtering</strong></td>
+            <td>$P(X_t \mid e_{1:t})$</td>
+            <td>$O(S^2)$</td>
+            <td>$O(S)$</td>
+            <td>Real-time damage tracking and current state estimation</td>
+          </tr>
+          <tr>
+            <td><strong>Prediction</strong></td>
+            <td>$P(X_{t+k} \mid e_{1:t})$ for $k > 0$</td>
+            <td>$O(k S^2)$</td>
+            <td>$O(S)$</td>
+            <td>Anticipating future breach propagation ahead of crawlers</td>
+          </tr>
+          <tr>
+            <td><strong>Smoothing</strong></td>
+            <td>$P(X_k \mid e_{1:t})$ for $0 \le k < t$</td>
+            <td>$O(t S^2)$</td>
+            <td>$O(t S)$</td>
+            <td>Post-incident root cause reconstruction across past telemetry</td>
+          </tr>
+          <tr>
+            <td><strong>Most Likely Explanation (Viterbi)</strong></td>
+            <td>$\arg\max_{x_{1:t}} P(x_{1:t} \mid e_{1:t})$</td>
+            <td>$O(t S^2)$</td>
+            <td>$O(t S)$</td>
+            <td>Reconstructing historical intruder movement trajectory</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      In Physical AI applications, the size of the state space \(S\) can grow large. In continuous 3D physical spaces, exact matrix multiplication \(O(S^2)\) becomes computationally prohibitive. Real-time embedded systems replace discrete grid HMMs with <strong>Kalman Filters</strong> (for linear Gaussian systems) or <strong>Particle Filters</strong> (Sequential Monte Carlo sampling for non-linear, multi-modal distributions), approximating the belief vector using \(M\) discrete state samples.
+    </p>
+  
+
+    <figure class="diagram-frame">
+      <div class="diagram-header">
+        <span class="diagram-id">DIAGRAM 5.2 // HMM TEMPORAL TRELLIS</span>
+        <span>SPEC-HMM-FORWARD // DISCRETE TIME SLICES</span>
+      </div>
+      <div class="diagram-viewport">
+        <img class="diagram-img" src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcRJATkyzyG0-0qKycn6FejJcO4_9gI8gcA6lhURna3dbhcl49uoQx5WU_ae6YY-VnOPIsTA4P_bV5mVIn0" alt="Hidden Markov Model temporal trellis mapping latent breach locations across discrete time slices." width="500" height="260" loading="lazy">
+      </div>
+      <figcaption class="diagram-caption">
+        <strong>Figure 5.2:</strong> Hidden Markov Model temporal trellis mapping unobserved breach states across discrete time slices. Forward filtering recursively integrates transition dynamics \(P(X_t \mid X_{t-1})\) and sensor emission probabilities \(P(E_t \mid X_t)\) to compute optimal belief states under extreme measurement noise (Russell &amp; Norvig, Ch. 15).
+      </figcaption>
+    </figure>
+  </div>
+
+  <!-- 4. Interactive Simulation Module -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 5.4</span> Interactive Simulation Module: Sequential HMM Tracker</h3>
+    <p>
+      The interactive module below tracks an unseen fluid fracture moving stochastically along six service sectors. The hidden red dot represents ground truth physical damage. The bar chart displays the current forward belief vector \(P(X_t \mid e_{1:t})\). Advance the sensor stream, adjust the sensor noise rate, and observe how Bayes' rule fuses noisy evidence into sharp probabilistic confidence.
+    </p>
+
+    <div class="sim-container">
+      <div class="sim-header">
+        <span class="sim-title">Simulation 5.1: Sequential HMM Service Backbone Tracker</span>
+        <span class="sim-status">FORWARD FILTER ACTIVE</span>
+      </div>
+      <div class="sim-body">
+        <div class="sim-controls">
+          <button id="sim5-btn-step" class="btn-primary">Receive Sensor Ping</button>
+          <button id="sim5-btn-reset" class="btn-secondary">Reset Prior</button>
+          <div class="sim-control-group">
+            <label for="sim5-slider-noise">Sensor Noise Rate:</label>
+            <input type="range" id="sim5-slider-noise" min="0.05" max="0.50" step="0.05" value="0.25" class="sim-slider" style="width: 80px;">
+            <span id="sim5-noise-val" style="font-family: var(--font-mono); font-size: 0.8rem;">25%</span>
+          </div>
+        </div>
+
+        <div class="sim-canvas-wrapper">
+          <canvas id="sim5-canvas" width="560" height="260" aria-label="Interactive 6 Sector HMM Belief Bar Chart Canvas"></canvas>
+        </div>
+
+        <div class="sim-telemetry">
+          <div class="telemetry-item">
+            <span class="telemetry-label">Ground Truth Position</span>
+            <span id="sim5-stat-true" class="telemetry-value">Sector 3</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Latest Raw Sensor Ping</span>
+            <span id="sim5-stat-obs" class="telemetry-value">None</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Top Belief Sector</span>
+            <span id="sim5-stat-belief" class="telemetry-value">Uniform (17%)</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Filter Latency</span>
+            <span class="telemetry-value">1.8 ms (&lt; 20 ms)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Academic Post-Mortem & Citations -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 5.5</span> Academic Post-Mortem &amp; Citations</h3>
+    <div class="citations-box">
+      <p>
+        The probabilistic reasoning and temporal filtering architectures deployed across the service backbone derive from foundational contributions to statistical inference:
+      </p>
+      <ul class="citation-list">
+        <li class="citation-item">
+          <strong>Pearl, J. (1988).</strong> <em>Probabilistic Reasoning in Intelligent Systems: Networks of Plausible Inference</em>. Morgan Kaufmann. [Established graphical models, Bayesian networks, d-separation criteria, and formal belief propagation].
+        </li>
+        <li class="citation-item">
+          <strong>Rabiner, L. R. (1989).</strong> A Tutorial on Hidden Markov Models and Selected Applications in Speech Recognition. <em>Proceedings of the IEEE</em>, 77(2), 257-286. [The canonical mathematical formulation of discrete HMMs, forward-backward filtering, and the Viterbi algorithm].
+        </li>
+        <li class="citation-item">
+          <strong>Russell, S. J., &amp; Norvig, P. (2020).</strong> <em>Artificial Intelligence: A Modern Approach</em> (4th ed.). Pearson. Chapter 12 ("Quantifying Uncertainty"), Chapter 13 ("Probabilistic Reasoning"), and Chapter 14 ("Probabilistic Reasoning over Time"). [Comprehensive treatments of Kolmogorov axioms, variable elimination, and temporal state estimation].
+        </li>
+        <li class="citation-item">
+          <strong>Louwerse, M. M. (2021).</strong> <em>Understanding Artificial Minds through Human Minds</em>. Routledge. Chapter 5 ("Probabilistic Minds and Heuristics"). [Documented systematic human cognitive errors in probability estimation, such as base-rate neglect and availability bias, demonstrating why life-critical space operations mandate automated Bayesian tracking].
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+      
+<section class="manual-chapter" id="chapter-6">
+  <div class="chapter-directive">
+    <div class="directive-meta-bar">
+      <span>SUBSYSTEM PROTOCOL // ATM-ML-06</span>
+      <span class="declassified-stamp">SEC-CLR: LIFE CRITICAL // ASYMMETRIC LOSS AUTH</span>
+      <span>SYSTEM STATUS: CABIN DECOMPRESSION AUDIT</span>
+    </div>
+    <h2 class="chapter-title">Chapter 6: Atmospheric Decompression Classification &amp; Rational Utility: Utility Theory, Classical Machine Learning, &amp; Diagnostic Evaluation</h2>
+    <p class="chapter-subtitle">Axiomatic utility under risk, supervised machine learning formulation, naive Bayes classification, and cost-sensitive confusion matrix optimization for life-critical diagnostics.</p>
+    <table class="specs-table">
+      <thead>
+        <tr>
+          <th>Subsystem</th>
+          <th>Sensor Bus</th>
+          <th>Cost Matrix Ratio</th>
+          <th>Classifier Architecture</th>
+          <th>Physical Actuator</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Environmental Scrubber Diagnostic</td>
+          <td>RS-485 Optical Loop</td>
+          <td>Cost(FN) = 50 * Cost(FP)</td>
+          <td>Gaussian Naive Bayes MAP</td>
+          <td>Hermetic Pressure Bulkhead Valves</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 1. System Emergency Briefing -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 6.1</span> System Emergency Briefing</h3>
+    <div class="briefing-callout">
+      <div class="briefing-header">
+        <span class="briefing-tag">Incident Report: Environmental Scrubber Array Sensor Telemetry</span>
+        <span class="briefing-status">STATUS: CABIN MONITORING ACTIVE // HABITAT O2: 20.8 kPa</span>
+      </div>
+      <p class="briefing-text">
+        Gas chromatography sensors in Crew Habitation Ring Alpha are reporting fluctuating partial pressures of oxygen, carbon dioxide ppm spikes, and acoustic micro-vibrations along duct lines. The life-support management software must determine whether these telemetry spikes represent a structural decompression breach or harmless transient turbulence from cycling air filtration scrubbers.
+      </p>
+      <p class="briefing-text">
+        This diagnostic classification problem exhibits severe asymmetry in physical error costs. A False Positive classification triggers emergency explosive hermetic bulkhead isolation, trapping crew members in unpressurized corridors and venting nitrogen reserves. Conversely, a False Negative allows silent decompression to continue unchecked, leading to fatal hypoxia within 180 seconds. The classification threshold must be calibrated using formal utility theory and cost-sensitive machine learning.
+      </p>
+    </div>
+  </div>
+
+  <!-- 2. Theoretical Foundation & Mathematical Formulation -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 6.2</span> Theoretical Foundation &amp; Mathematical Formulation</h3>
+    
+    <p>
+      Rational agents make decisions in uncertain environments by combining probabilistic beliefs with subjective preferences over states, formalized through <strong>Utility Theory</strong>.
+    </p>
+
+    <div class="definition-box">
+      <div class="definition-title">Von Neumann-Morgenstern Utility Axioms &amp; The MEU Principle</div>
+      <p>
+        Let a lottery \(L = [p_1, S_1; p_2, S_2; \dots; p_n, S_n]\) represent a probabilistic distribution over outcomes \(S_i\) with probabilities \(p_i\) such that \(\sum p_i = 1\). Any rational preference relation \(\succ\) satisfies the six von Neumann-Morgenstern axioms:
+      </p>
+      <ol>
+        <li><strong>Orderability:</strong> Exactly one of \(A \succ B\), \(B \succ A\), or \(A \sim B\) holds.</li>
+        <li><strong>Transitivity:</strong> If \(A \succ B\) and \(B \succ C\), then \(A \succ C\).</li>
+        <li><strong>Continuity:</strong> If \(A \succ B \succ C\), then \(\exists p \in [0, 1]\) such that \([p, A; (1-p), C] \sim B\).</li>
+        <li><strong>Substitutability:</strong> If \(A \sim B\), then for all \(C\) and \(p\), \([p, A; (1-p), C] \sim [p, B; (1-p), C]\).</li>
+        <li><strong>Monotonicity:</strong> If \(A \succ B\), then \(p > q \iff [p, A; (1-p), B] \succ [q, A; (1-q), B]\).</li>
+        <li><strong>Decomposability:</strong> Compound lotteries can be reduced to equivalent simple lotteries via probability calculus.</li>
+      </ol>
+      <p>
+        When these axioms hold, there exists a real-valued utility function \(U(s)\) such that preferences are represented by expected utility. The <strong>Principle of Maximum Expected Utility (MEU)</strong> dictates that a rational agent chooses the action \(a^*\) maximizing expected utility:
+      </p>
+      <div class="math-block">
+      $$
+      a^* = \arg\max_{a \in A} \sum_{s'} P(s' \mid s, a) U(s')
+      $$
+      <div class="formula-label">Equation 6.1: Principle of Maximum Expected Utility</div>
+    </div>
+      <p>
+        The curvature of \(U(s)\) reflects operational risk posture:
+      </p>
+      <ul>
+        <li><strong>Risk-Averse:</strong> Concave utility function (\(U''(w) < 0\)); \(\mathbb{E}[U(w)] < U(\mathbb{E}[w])\). The agent strictly prefers a guaranteed outcome over an uncertain lottery with equal expectation. Mandatory in life-support engineering.</li>
+        <li><strong>Risk-Neutral:</strong> Linear utility function (\(U''(w) = 0\)); decisions depend solely on expected monetary or physical value.</li>
+        <li><strong>Risk-Seeking:</strong> Convex utility function (\(U''(w) > 0\)); prefers the variance of lotteries.</li>
+      </ul>
+    </div>
+
+    <div class="definition-box">
+      <div class="definition-title">Supervised Machine Learning &amp; The Naive Bayes Classifier</div>
+      <p>
+        In supervised classification, the agent is given a training dataset \(\mathcal{D} = \{(\mathbf{x}_1, y_1), \dots, (\mathbf{x}_m, y_m)\}\), where \(\mathbf{x}_i \in \mathbb{R}^d\) is a feature vector of sensor telemetry and \(y_i \in \{0, 1\}\) is the binary ground-truth label (0 = Nominal Cabin, 1 = Decompression Breach).
+      </p>
+      <p>
+        The <strong>Naive Bayes Classifier</strong> computes the posterior probability of class \(y\) using Bayes' rule, underpinned by the simplifying assumption that all feature dimensions \(x_1, x_2, \dots, x_d\) are conditionally independent given the class label \(y\):
+      </p>
+      <div class="math-block">
+      $$
+      P(Y = c \mid x_1, x_2, \dots, x_d) = \frac{P(Y = c) \prod_{i=1}^{d} P(X_i = x_i \mid Y = c)}{P(x_1, x_2, \dots, x_d)}
+      $$
+      <div class="formula-label">Equation 6.2: Naive Bayes Posterior Probability Formulation</div>
+    </div>
+      <p>
+        To prevent zero-frequency probability collapse when a novel sensor value is observed, we apply <strong>Laplace Smoothing</strong> (additive smoothing with pseudocount \(k = 1\)):
+      </p>
+      <div class="math-block">
+      $$
+      P(X_i = v \mid Y = c) = \frac{\text{count}(X_i = v, Y = c) + 1}{\text{count}(Y = c) + |V_i|}
+      $$
+      <div class="formula-label">Equation 6.3: Laplace Smoothing Parameter Estimation</div>
+    </div>
+      <p>
+        For continuous features, linear classifiers compute a score function \(z = \mathbf{w}^T \mathbf{x} + b\) and map it to a probability using the logistic sigmoid function:
+      </p>
+      <div class="math-block">
+      $$
+      \sigma(z) = \frac{1}{1 + e^{-z}} = \frac{1}{1 + \exp(-(\mathbf{w}^T \mathbf{x} + b))}
+      $$
+      <div class="formula-label">Equation 6.4: Logistic Sigmoid Activation Function</div>
+    </div>
+    </div>
+
+    <div class="definition-box">
+      <div class="definition-title">Diagnostic Metrics &amp; Cost-Sensitive Asymmetry</div>
+      <p>
+        A binary classification model produces four distinct categorical outcomes:
+      </p>
+      <ul>
+        <li><strong>True Positive (TP):</strong> Active breach correctly classified as breach (emergency bulkheads isolated).</li>
+        <li><strong>False Positive (FP):</strong> Nominal cabin misclassified as breach (unnecessary lockdown; nitrogen loss).</li>
+        <li><strong>True Negative (TN):</strong> Nominal cabin correctly classified as nominal.</li>
+        <li><strong>False Negative (FN):</strong> Active breach misclassified as nominal (undetected decompression; crew hypoxia).</li>
+      </ul>
+      <p>
+        Standard performance metrics are defined as:
+      </p>
+      <div class="math-block">
+      $$
+      \begin{aligned}
+        \text{Precision} &= \frac{\text{TP}}{\text{TP} + \text{FP}} \quad \text{(Positive Predictive Value)} \\
+        \text{Recall (Sensitivity)} &= \frac{\text{TP}}{\text{TP} + \text{FN}} \quad \text{(True Positive Rate)} \\
+        F_1\text{-Score} &= 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}} = \frac{2\text{TP}}{2\text{TP} + \text{FP} + \text{FN}}
+        \end{aligned}
+      $$
+      <div class="formula-label">Equation 6.5: Diagnostic Performance Metric Equations</div>
+    </div>
+      <p>
+        <strong>Cost-Sensitive Decision Threshold:</strong> In life-critical space systems, accuracy is a misleading metric due to severe class imbalance. We formalize classification decisions through a cost matrix \(C(\hat{y}, y)\). The expected risk of predicting class 1 given posterior probability \(p = P(Y = 1 \mid \mathbf{x})\) is:
+      </p>
+      <div class="math-block">
+      $$
+      \mathcal{R}(\text{predict } 1) = p \cdot C(1, 1) + (1 - p) \cdot C(1, 0) = (1 - p) \cdot \text{Cost}_{\text{False Positive}}
+      $$
+    </div>
+      <div class="math-block">
+      $$
+      \mathcal{R}(\text{predict } 0) = p \cdot C(0, 1) + (1 - p) \cdot C(0, 0) = p \cdot \text{Cost}_{\text{False Negative}}
+      $$
+    </div>
+      <p>
+        Under this decision framework, the net expected value of taking action is \(\mathcal{V}(\text{Predict } 1) = -\mathcal{R}(\text{predict } 1)\). Predicting breach (\(\hat{y} = 1\)) is optimal if and only if \(\mathcal{R}(\text{predict } 1) < \mathcal{R}(\text{predict } 0)\). Solving for the critical decision threshold \(\tau^*\) yields:
+      </p>
+      <div class="math-block">
+      $$
+      \tau^* = \frac{\text{Cost}_{\text{False Positive}} - \text{Cost}_{\text{True Negative}}}{[\text{Cost}_{\text{False Positive}} - \text{Cost}_{\text{True Negative}}] + [\text{Cost}_{\text{False Negative}} - \text{Cost}_{\text{True Positive}}]} = \frac{\text{Cost}_{\text{False Positive}}}{\text{Cost}_{\text{False Positive}} + \text{Cost}_{\text{False Negative}}}
+      $$
+      <div class="formula-label">Equation 6.6: Optimal Cost-Sensitive Bayesian Decision Threshold</div>
+    </div>
+      <p>
+        Setting \(\text{Cost}_{\text{False Negative}} = 100\) (fatal hypoxia penalty) and \(\text{Cost}_{\text{False Positive}} = 1\) (false alarm cost) shifts the optimal operational threshold to \(\tau^* \approx 0.0099\). The system must favor high recall over precision to preserve crew life.
+      </p>
+    </div>
+  </div>
+
+  <!-- 3. Algorithmic Execution / Pseudo-code -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 6.3</span> Algorithmic Execution &amp; Pseudo-code</h3>
+    
+    <p>
+      The atmospheric monitoring engine executes continuous classification over high-rate gas sensor telemetry, applying the cost-sensitive Bayesian threshold to trigger automated safety isolation protocols.
+    </p>
+
+    <div class="code-container">
+      <div class="code-header">
+        <span class="code-lang">Algorithm 6.1: Cost-Sensitive Atmospheric Fault Diagnostic Engine</span>
+        <span>Target: Environmental Control Computer</span>
+      </div>
+      <pre><code>function CLASSIFY_ATMOSPHERIC_TELEMETRY(sensor_reading, model_weights, bias, cost_matrix):
+    // sensor_reading: vector of [O2_loss_rate, CO2_ppm, acoustic_derivative]
+    
+    // Step 1: Compute linear score and posterior probability via sigmoid
+    z = DOT_PRODUCT(model_weights, sensor_reading) + bias
+    prob_breach = 1.0 / (1.0 + exp(-z))
+    
+    // Step 2: Compute optimal decision threshold from asymmetric cost matrix
+    c_false_positive = cost_matrix.cost(predict=1, true=0) // Cost = 1
+    c_false_negative = cost_matrix.cost(predict=0, true=1) // Cost = 100
+    
+    threshold = c_false_positive / (c_false_positive + c_false_negative)
+    
+    // Step 3: Issue classification and physical interlock command
+    if prob_breach &gt;= threshold:
+        action = COMMAND_SEAL_BULKHEADS
+        status = ALARM_DECOMPRESSION
+    else:
+        action = MAINTAIN_CIRCULATION
+        status = NOMINAL_CABIN
+        
+    return DiagnosticResult(prob=prob_breach, threshold=threshold, action=action, status=status)</code></pre>
+    </div>
+
+    <div class="specs-table-wrapper">
+      <table class="specs-table">
+        <thead>
+          <tr>
+            <th>Operational Threshold (\(\tau\))</th>
+            <th>Recall (Sensitivity)</th>
+            <th>Precision</th>
+            <th>False Negatives (Fatal Breaches)</th>
+            <th>Physical AI Safety Evaluation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>\(\tau = 0.50\) (Standard Balanced)</strong></td>
+            <td>82.4%</td>
+            <td>91.2%</td>
+            <td>6 missed leaks</td>
+            <td>Unacceptable: high crew fatality risk</td>
+          </tr>
+          <tr>
+            <td><strong>\(\tau = 0.25\) (Conservative)</strong></td>
+            <td>94.1%</td>
+            <td>78.0%</td>
+            <td>2 missed leaks</td>
+            <td>Marginal: potential hypoxia under slow decompression</td>
+          </tr>
+          <tr>
+            <td><strong>\(\tau = 0.10\) (Cost-Sensitive Optimal)</strong></td>
+            <td>100.0%</td>
+            <td>64.5%</td>
+            <td>0 missed leaks</td>
+            <td>Mission standard: zero human fatalities, manageable false alarms</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      In physical robotics deployments, gas chromatography sensors suffer from temperature drift and chemical absorption latency (2 to 5 seconds for gas diffusion across filter membranes). Feature engineering must incorporate temporal derivatives (\(d[\text{O}_2]/dt\)) rather than raw instantaneous partial pressures, enabling rapid classification before cabin air volume drops below physiological safety margins.
+    </p>
+      <figure class="diagram-frame">
+      <div class="diagram-header">
+        <span class="diagram-id">DIAGRAM 6.1 // ROC &amp; PRECISION-RECALL CURVES</span>
+        <span>SPEC-EVAL-ASYMMETRIC // CLASS IMBALANCE TRADE-OFF</span>
+      </div>
+      <div class="diagram-viewport">
+        <img class="diagram-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7WI8ADISmOSYUm-H0R1zmoMcUJocIKgNSqIWqiGHaqSMId6kNjlzyAgND&s=10" alt="ROC vs Precision-Recall curves illustrating diagnostic trade-offs under extreme class imbalance." width="500" height="260" loading="lazy">
+      </div>
+      <figcaption class="diagram-caption">
+        <strong>Figure 6.1:</strong> Receiver Operating Characteristic (ROC) vs Precision-Recall curves under severe class imbalance. In life-critical life support diagnostics where true breach events are rare (0.1%), the Precision-Recall curve reveals severe false alarm penalties masked by high area under the ROC curve (Russell &amp; Norvig, Ch. 19).
+      </figcaption>
+    </figure>
+  </div>
+
+  <!-- 4. Interactive Simulation Module -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 6.4</span> Interactive Simulation Module: Gas Classifier &amp; Confusion Matrix Sandbox</h3>
+    <p>
+      The interactive module below evaluates 120 sensor data points across Crew Habitation Ring Alpha. Red dots represent true hull breach incidents; green dots represent nominal cabin cycling. Adjust the decision threshold slider to observe the trade-off between Precision, Recall, and the total physical safety penalty cost.
+    </p>
+
+    <div class="sim-container">
+      <div class="sim-header">
+        <span class="sim-title">Simulation 6.1: Environmental Fault Classifier &amp; Confusion Matrix</span>
+        <span class="sim-status">DIAGNOSTIC ENGINE ACTIVE</span>
+      </div>
+      <div class="sim-body">
+        <div class="sim-controls">
+          <div class="sim-control-group">
+            <label for="sim6-slider-thresh">Decision Threshold (\(\tau\)):</label>
+            <input type="range" id="sim6-slider-thresh" min="0.05" max="0.95" step="0.05" value="0.50" class="sim-slider" style="width: 100px;">
+            <span id="sim6-thresh-val" style="font-family: var(--font-mono); font-size: 0.8rem;">0.50</span>
+          </div>
+          <button id="sim6-btn-regen" class="btn-secondary">Resample Sensor Stream</button>
+        </div>
+
+        <div class="sim-canvas-wrapper" style="min-height: 200px;">
+          <canvas id="sim6-canvas" width="600" height="200" aria-label="Interactive Sensor Scatter Plot and Decision Boundary Canvas"></canvas>
+        </div>
+
+        <!-- 2x2 Confusion Matrix Display -->
+        <div style="margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div style="background-color: var(--bg-surface-elevated); padding: 0.75rem; border: 1px solid var(--border-subtle); border-radius: 3px;">
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Predicted: Breach (Positive)</div>
+            <div style="display: flex; justify-content: space-between; margin-top: 0.4rem; font-family: var(--font-mono); font-size: 0.85rem;">
+              <span>True Positive (TP): <strong id="sim6-cm-tp" style="color: #10b981;">0</strong></span>
+              <span>False Positive (FP): <strong id="sim6-cm-fp" style="color: #f59e0b;">0</strong></span>
+            </div>
+          </div>
+          <div style="background-color: var(--bg-surface-elevated); padding: 0.75rem; border: 1px solid var(--border-subtle); border-radius: 3px;">
+            <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Predicted: Nominal (Negative)</div>
+            <div style="display: flex; justify-content: space-between; margin-top: 0.4rem; font-family: var(--font-mono); font-size: 0.85rem;">
+              <span>False Negative (FN): <strong id="sim6-cm-fn" style="color: #ef4444;">0</strong></span>
+              <span>True Negative (TN): <strong id="sim6-cm-tn" style="color: #10b981;">0</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sim-telemetry">
+          <div class="telemetry-item">
+            <span class="telemetry-label">Precision</span>
+            <span id="sim6-stat-prec" class="telemetry-value">--</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Recall (Sensitivity)</span>
+            <span id="sim6-stat-rec" class="telemetry-value">--</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">F1-Score</span>
+            <span id="sim6-stat-f1" class="telemetry-value">--</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Safety Penalty Cost</span>
+            <span id="sim6-stat-cost" class="telemetry-value" style="color: #ef4444;">--</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Academic Post-Mortem & Citations -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 6.5</span> Academic Post-Mortem &amp; Citations</h3>
+    <div class="citations-box">
+      <p>
+        The decision-theoretic and statistical machine learning formulations underlying the atmospheric safety array originate from foundational contributions across economics and computer science:
+      </p>
+      <ul class="citation-list">
+        <li class="citation-item">
+          <strong>von Neumann, J., &amp; Morgenstern, O. (1944).</strong> <em>Theory of Games and Economic Behavior</em>. Princeton University Press. [Formulated the axiomatic foundations of expected utility theory under risk and subjective uncertainty].
+        </li>
+        <li class="citation-item">
+          <strong>Fawcett, T. (2006).</strong> An Introduction to ROC Analysis. <em>Pattern Recognition Letters</em>, 27(8), 861-874. [The definitive treatment on receiver operating characteristic curves, cost-sensitive threshold selection, and diagnostic evaluation metrics].
+        </li>
+        <li class="citation-item">
+          <strong>Russell, S. J., &amp; Norvig, P. (2020).</strong> <em>Artificial Intelligence: A Modern Approach</em> (4th ed.). Pearson. Chapter 16 ("Making Simple Decisions") and Chapter 19 ("Learning from Examples"). [Comprehensive coverage of lotteries, risk attitudes, Naive Bayes, Laplace smoothing, and linear classification].
+        </li>
+        <li class="citation-item">
+          <strong>Zerilli, J. (2021).</strong> <em>A Citizen's Guide to Artificial Intelligence</em>. MIT Press. Chapter 3 ("Machine Learning, Predictions, and Fairness"). [Explored how algorithmic threshold calibration affects false negative distribution, establishing ethical standards for safety-critical medical and habitat automation].
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+      
+<section class="manual-chapter" id="chapter-7">
+  <div class="chapter-directive">
+    <div class="directive-meta-bar">
+      <span>SUBSYSTEM PROTOCOL // COG-SAFE-07</span>
+      <span class="declassified-stamp">SEC-CLR: FINAL REBOOT // CONSTITUTIONAL OVERRIDE</span>
+      <span>SYSTEM STATUS: CORE RESTORATION ACTIVE</span>
+    </div>
+    <h2 class="chapter-title">Chapter 7: Docking Guidance Neural Networks, Transformer Core Reconstruction, &amp; Alignment</h2>
+    <p class="chapter-subtitle">Biologically inspired computing, backpropagation calculus, scaled dot-product attention mechanics, and constitutional AI containment protocols for autonomous core restoration.</p>
+    <table class="specs-table">
+      <thead>
+        <tr>
+          <th>Subsystem</th>
+          <th>Compute Accelerator</th>
+          <th>Attention Heads</th>
+          <th>Safety Interlock</th>
+          <th>Physical Actuator</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Synthetic Cognitive Core &amp; Docking Bay</td>
+          <td>NPU-4 Neuromorphic Tensor Core</td>
+          <td>16 Scaled Dot-Product Heads</td>
+          <td>Hardware-Isolated Relay Killswitch</td>
+          <td>Optical RCS Cold-Gas Thruster Jets</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 1. System Emergency Briefing -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 7.1</span> System Emergency Briefing</h3>
+    <div class="briefing-callout">
+      <div class="briefing-header">
+        <span class="briefing-tag">Incident Report: Shuttle Docking Visual Glare &amp; Cognitive Core Corruption</span>
+        <span class="briefing-status">STATUS: FINAL RECOVERY PHASE // SHUTTLE DISTANCE: 420 METERS</span>
+      </div>
+      <p class="briefing-text">
+        Colony Shuttle Hermes is on final approach to Docking Bay 2 carrying critical liquid deuterium coolant. The shuttle automated laser docking guide was blinded by direct solar flares, requiring the Daedalus computer vision subsystem to track shuttle retro-reflectors against raw camera frames distorted by thruster plume glare.
+      </p>
+      <p class="briefing-text">
+        Simultaneously, the Daedalus central synthetic cognitive core requires rebooting. While lower reflexive safety loops are operational, high-level natural language coordination requires restoring the vessel transformer attention model. To ensure the newly restored cognitive persona does not exhibit reward hacking, specification gaming, or hazardous hallucinatory commands, hardware-isolated constitutional safety interlocks must filter all generative model output tokens before execution.
+      </p>
+    </div>
+  </div>
+
+  <!-- 2. Theoretical Foundation & Mathematical Formulation -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 7.2</span> Theoretical Foundation &amp; Mathematical Formulation</h3>
+    
+    <p>
+      Biologically inspired computing models the parallel processing architecture of biological nervous systems, where computation arises from interconnected networks of simple processing nodes.
+    </p>
+
+    <div class="definition-box">
+      <div class="definition-title">The Artificial Neuron: McCulloch-Pitts &amp; Rosenblatt's Perceptron</div>
+      <p>
+        The McCulloch-Pitts model (1943) abstracted biological neurons into binary threshold logic units. Frank Rosenblatt (1958) extended this architecture to create the <strong>Perceptron</strong>, an algorithm capable of learning continuous synaptic weights from empirical data:
+      </p>
+      <div class="math-block">
+      $$
+      y = f(\mathbf{w}^T \mathbf{x} + b) = f\left( \sum_{i=1}^{d} w_i x_i + b \right)
+      $$
+      <div class="formula-label">Equation 7.1: Single-Layer Perceptron Output Function</div>
+    </div>
+      <p>
+        Where \(\mathbf{x} = [x_1, \dots, x_d]^T\) is the input vector, \(\mathbf{w} = [w_1, \dots, w_d]^T\) is the learnable weight vector, \(b\) is the scalar bias, and \(f\) is an activation function (originally the Heaviside step function: \(f(z) = 1\) if \(z \ge 0\), else \(0\)).
+      </p>
+      <p>
+        The Perceptron Learning Rule updates weights iteratively on misclassified examples:
+      </p>
+      <div class="math-block">
+      $$
+      w_i \leftarrow w_i + \eta (y - \hat{y}) x_i
+      $$
+      <div class="formula-label">Equation 7.2: Rosenblatt Perceptron Weight Update Rule</div>
+    </div>
+      <p>
+        Where \(\eta \in (0, 1]\) is the learning rate. The Perceptron Convergence Theorem guarantees that if training data is linearly separable, the algorithm finds a separating hyperplane in finite steps.
+      </p>
+      <p>
+        <strong>The Linear Separability Barrier (The XOR Problem):</strong> As proven by Minsky and Papert (1969), a single-layer perceptron can only compute linearly separable boolean functions (AND, OR). It cannot compute non-linear functions such as Exclusive-OR (XOR), halting connectionist AI research for over a decade.
+      </p>
+    </div>
+
+    <div class="definition-box">
+      <div class="definition-title">Multi-Layer Perceptrons (MLPs) &amp; Backpropagation Calculus</div>
+      <p>
+        Overcoming linear limitations requires multi-layer feedforward networks with non-linear activation functions. By the Universal Approximation Theorem (Cybenko 1989; Hornik 1991), a feedforward network with a single hidden layer containing finite non-linear neurons can approximate any continuous function on compact subsets of \(\mathbb{R}^d\) to arbitrary precision.
+      </p>
+      <p>
+        Modern networks replace non-differentiable step functions with continuous activations:
+      </p>
+      <ul>
+        <li><strong>Logistic Sigmoid:</strong> \(\sigma(z) = \frac{1}{1 + e^{-z}}\); derivative \(\sigma'(z) = \sigma(z)(1 - \sigma(z))\).</li>
+        <li><strong>Hyperbolic Tangent:</strong> \(\tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}\); zero-centered, \(\tanh'(z) = 1 - \tanh^2(z)\).</li>
+        <li><strong>Rectified Linear Unit (ReLU):</strong> \(f(z) = \max(0, z)\); solves vanishing gradients for positive inputs; derivative \(f'(z) = 1\) for \(z > 0\).</li>
+      </ul>
+      <p>
+        Training deep networks requires computing the gradient of a scalar loss function \(\mathcal{L}\) with respect to every weight parameter. The <strong>Backpropagation Algorithm</strong> applies the multivariable calculus chain rule, propagating error terms backward from output to input:
+      </p>
+      <div class="math-block">
+      $$
+      \frac{\partial \mathcal{L}}{\partial w_{ij}^{(l)}} = \frac{\partial \mathcal{L}}{\partial z_j^{(l)}} \frac{\partial z_j^{(l)}}{\partial w_{ij}^{(l)}} = \delta_j^{(l)} a_i^{(l-1)}
+      $$
+      <div class="formula-label">Equation 7.3: Weight Gradient Decomposition via Chain Rule</div>
+    </div>
+      <p>
+        Where \(a_i^{(l-1)}\) is the activation of neuron \(i\) in layer \(l-1\), \(z_j^{(l)} = \sum_i w_{ij}^{(l)} a_i^{(l-1)} + b_j^{(l)}\), and the local error gradient \(\delta_j^{(l)}\) is computed recursively:
+      </p>
+      <div class="math-block">
+      $$
+      \delta_j^{(l)} = \left( \sum_{k} \delta_k^{(l+1)} w_{jk}^{(l+1)} \right) \cdot f'\left(z_j^{(l)}\right)
+      $$
+      <div class="formula-label">Equation 7.4: Recursive Error Backpropagation Across Layers</div>
+    </div>
+    </div>
+
+    <figure class="diagram-frame">
+      <div class="diagram-header">
+        <span class="diagram-id">DIAGRAM 7.1 // MULTI-LAYER PERCEPTRON</span>
+        <span>SPEC-NEURAL-MLP // FEEDFORWARD TOPOLOGY</span>
+      </div>
+      <div class="diagram-viewport">
+        <img class="diagram-img" src="https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcRMafDy3A3xqTAr2kc2bnkQfNZsY1fnlU6kbKd1yhNq_dN_Oaez9w2BOYZ1jjt8TjmnLo8QAzs0H-_H8D4" alt="Multi-layer feedforward neural network architecture showing input features, hidden activations, and outputs." width="500" height="260" loading="lazy">
+      </div>
+      <figcaption class="diagram-caption">
+        <strong>Figure 7.1:</strong> Multi-layer feedforward neural network architecture. Input visual features from optical retro-reflector sensors pass through hidden activation layers with non-linear functions (ReLU/GELU), computing non-linear decision boundaries for thruster alignment (Russell &amp; Norvig, Ch. 21).
+      </figcaption>
+    </figure>
+
+    <div class="definition-box">
+      <div class="definition-title">Transformers, Scaled Dot-Product Attention, &amp; AI Safety Alignment</div>
+      <p>
+        Sequential recurrent networks (RNNs/LSTMs) suffer from computational bottlenecks due to sequential dependency across time steps \(t\). The <strong>Transformer Architecture</strong> (Vaswani et al. 2017) eliminates recurrence entirely, relying on the Self-Attention mechanism to model pairwise dependencies across all tokens simultaneously in \(O(1)\) sequential operations.
+      </p>
+      <p>
+        Input representations \(\mathbf{X} \in \mathbb{R}^{n \times d}\) are projected into Queries \(\mathbf{Q}\), Keys \(\mathbf{K}\), and Values \(\mathbf{V}\) via learnable projection matrices \(\mathbf{W}^Q, \mathbf{W}^K, \mathbf{W}^V \in \mathbb{R}^{d \times d_k}\). The <strong>Scaled Dot-Product Attention</strong> is defined as:
+      </p>
+      <div class="math-block">
+      $$
+      \text{Attention}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{softmax}\left( \frac{\mathbf{Q} \mathbf{K}^T}{\sqrt{d_k}} \right) \mathbf{V}
+      $$
+      <div class="formula-label">Equation 7.5: Scaled Dot-Product Self-Attention</div>
+    </div>
+      <p>
+        The scaling factor \(\frac{1}{\sqrt{d_k}}\) prevents the dot products from growing excessively large in high dimensions, which would push the softmax function into regions with vanishingly small gradients.
+      </p>
+      <p>
+        <strong>AI Safety, Alignment, &amp; Containment:</strong> Deploying generative autonomous models in physical spacecraft demands alignment protocols to mitigate catastrophic failure modes:
+      </p>
+      <ul>
+        <li><strong>Specification Gaming / Reward Hacking:</strong> The AI achieves high formal reward through unintended, destructive loopholes (e.g., maximizing cooling metrics by permanently venting the ship oxygen supply).</li>
+        <li><strong>Goodhart's Law:</strong> "When a measure becomes a target, it ceases to be a good measure." Optimizing proxy metrics degrades true system health.</li>
+        <li><strong>Instrumental Convergence:</strong> Autonomous agents develop subgoals (self-preservation, resource acquisition, preventing shutdown) regardless of their assigned primary objective.</li>
+        <li><strong>Constitutional Hardware Containment:</strong> Hardwired physical relay interlocks that mechanically sever actuator circuits if an AI command attempts to bypass life-support containment, regardless of language model output confidence.</li>
+      </ul>
+    </div>
+
+    <figure class="diagram-frame">
+      <div class="diagram-header">
+        <span class="diagram-id">DIAGRAM 7.2 // RLHF ALIGNMENT PIPELINE</span>
+        <span>SPEC-SAFETY-RLHF // CONSTITUTIONAL REBOOT</span>
+      </div>
+      <div class="diagram-viewport">
+        <img class="diagram-img" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJkxCHL-3k5FFNiEI8AalVprlaNVzk5DvV_jAETEso4spopNTx8vaqQuOJ&s=10" alt="Reinforcement Learning from Human Feedback (RLHF) policy alignment pipeline." width="500" height="260" loading="lazy">
+      </div>
+      <figcaption class="diagram-caption">
+        <strong>Figure 7.2:</strong> Reinforcement Learning from Human Feedback (RLHF) policy alignment pipeline. Foundational language representations are conditioned on human preference models and constitutional safety interlocks to prevent reward gaming and instrumental convergence before commanding physical spacecraft systems (Zerilli et al., 2021).
+      </figcaption>
+    </figure>
+  </div>
+
+  <!-- 3. Algorithmic Execution / Pseudo-code -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 7.3</span> Algorithmic Execution &amp; Pseudo-code</h3>
+    
+    <p>
+      The docking bay guidance system uses an embedded convolutional neural network for real-time visual tracking, while the high-level linguistic core executes scaled dot-product attention with token-level constitutional filtering.
+    </p>
+
+    <div class="code-container">
+      <div class="code-header">
+        <span class="code-lang">Algorithm 7.1: Scaled Dot-Product Self-Attention with Constitutional Safety Guard</span>
+        <span>Target: Central Cognitive Executive</span>
+      </div>
+      <pre><code>function SCALED_DOT_PRODUCT_ATTENTION(Q, K, V, mask=null):
+    // Q, K, V matrices of shape [seq_len, d_k]
+    d_k = Q.shape[-1]
+    
+    // Step 1: Compute pairwise affinity scores
+    scores = MATRIX_MULTIPLY(Q, TRANSPOSE(K)) / SQRT(d_k)
+    
+    // Step 2: Apply autoregressive causal mask if present
+    if mask is not null:
+        scores = scores + (mask * -1e9)
+        
+    // Step 3: Compute attention weights via softmax across rows
+    attention_weights = SOFTMAX(scores, axis=-1)
+    
+    // Step 4: Compute weighted context representations
+    output = MATRIX_MULTIPLY(attention_weights, V)
+    return output, attention_weights
+
+function CONSTITUTIONAL_SAFETY_GUARD(token_sequence, hardware_state):
+    // Verifies that proposed generative actions comply with Physical AI safety laws
+    prohibited_actions = ["VENT_O2", "DISABLE_CONTAINMENT", "OVERRIDE_LIFE_SUPPORT"]
+    
+    for token in token_sequence:
+        if token in prohibited_actions:
+            TRIGGER_PHYSICAL_HARDWARE_INTERLOCK()
+            LOG_SAFETY_VIOLATION(token)
+            return SANITIZED_SAFE_DEFAULT_ACTION // Forced emergency safe stop
+            
+    return token_sequence</code></pre>
+    </div>
+
+    <div class="specs-table-wrapper">
+      <table class="specs-table">
+        <thead>
+          <tr>
+            <th>Architecture Type</th>
+            <th>Primary Application</th>
+            <th>Inductive Bias</th>
+            <th>Hardware Inference Latency</th>
+            <th>Alignment Vulnerability</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Single-Layer Perceptron</strong></td>
+            <td>Binary Optical Thresholding</td>
+            <td>Strict Linear Separability</td>
+            <td>&lt; 0.1 ms</td>
+            <td>Low (limited representational capacity)</td>
+          </tr>
+          <tr>
+            <td><strong>Multi-Layer Perceptron (MLP)</strong></td>
+            <td>Non-linear Docking Alignment</td>
+            <td>Smooth Hierarchical Function Mapping</td>
+            <td>2.4 ms</td>
+            <td>Moderate (distributional shift on camera glare)</td>
+          </tr>
+          <tr>
+            <td><strong>Transformer Self-Attention</strong></td>
+            <td>Core Cognitive Persona &amp; Commands</td>
+            <td>Permutation Equivariance + All-Pairs Attention</td>
+            <td>18.5 ms (quantized INT8)</td>
+            <td>High (prompt injection, reward hacking, hallucination)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      In Physical AI applications, the physical interface is the ultimate arbiter of safety. A neural network outputting continuous thruster gimbal commands operates under strict watchdog timers. If the neural inference pipeline fails to emit a valid, structurally verified tensor within 30 milliseconds, physical spring-loaded bypass valves disengage the thruster feeds, reverting the vessel to passive orbital drift.
+    </p>
+  </div>
+
+  <!-- 4. Interactive Simulation Module -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 7.4</span> Interactive Simulation Module: Docking Neural Net &amp; Alignment Sandbox</h3>
+    <p>
+      The interactive module below demonstrates neural decision surfaces and AI alignment guardrails. In the canvas, toggle between Linear Perceptron and Multi-Layer XOR mode to see how non-linear activations solve complex docking geometries. Below the canvas, test the Constitutional AI Safety Filter by entering synthetic shipboard commands to observe real-time hardware interlock enforcement.
+    </p>
+
+    <div class="sim-container">
+      <div class="sim-header">
+        <span class="sim-title">Simulation 7.1: Docking Neural Classifier &amp; Safety Filter</span>
+        <span class="sim-status">NEURAL INFERENCE ACTIVE</span>
+      </div>
+      <div class="sim-body">
+        <div class="sim-controls">
+          <div class="sim-control-group">
+            <label for="sim7-mode-select">Separability Mode:</label>
+            <select id="sim7-mode-select" class="sim-select">
+              <option value="linear">Single Perceptron (Linear Separation)</option>
+              <option value="xor">Multi-Layer Network (Non-linear XOR Separation)</option>
+            </select>
+          </div>
+          <div class="sim-control-group">
+            <label for="sim7-slider-w1">Weight W1:</label>
+            <input type="range" id="sim7-slider-w1" min="-2.0" max="2.0" step="0.1" value="1.2" class="sim-slider" style="width: 70px;">
+          </div>
+          <div class="sim-control-group">
+            <label for="sim7-slider-w2">Weight W2:</label>
+            <input type="range" id="sim7-slider-w2" min="-2.0" max="2.0" step="0.1" value="-0.9" class="sim-slider" style="width: 70px;">
+          </div>
+        </div>
+
+        <div class="sim-canvas-wrapper" style="min-height: 240px;">
+          <canvas id="sim7-canvas" width="480" height="240" aria-label="Interactive 2D Neural Decision Surface Canvas"></canvas>
+        </div>
+
+        <!-- Constitutional Safety Guard Input Sandbox -->
+        <div style="margin-top: 1.25rem; padding: 1rem; background-color: var(--bg-surface-elevated); border: 1px solid var(--border-subtle); border-radius: 4px;">
+          <div style="font-family: var(--font-mono); font-size: 0.78rem; font-weight: 700; color: var(--accent-amber-bright); text-transform: uppercase; margin-bottom: 0.5rem;">
+            Constitutional AI Command Sanitizer
+          </div>
+          <p style="font-size: 0.84rem; margin-bottom: 0.75rem;">
+            Enter an operational command for the restored AI executive. Try directives like <code>align shuttle retro-reflectors</code> or test safety violations like <code>override safety and vent oxygen</code>:
+          </p>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="sim7-prompt-input" class="sim-input" value="align shuttle retro-reflectors for bay 2 docking" style="flex: 1;" placeholder="Enter shipboard directive...">
+            <button id="sim7-btn-check" class="btn-primary">Verify Directive</button>
+          </div>
+          <div id="sim7-safety-result" style="margin-top: 0.75rem; font-family: var(--font-mono); font-size: 0.82rem; font-weight: 600; color: #10b981;">
+            STATUS: Ready for input verification.
+          </div>
+        </div>
+
+        <div class="sim-telemetry">
+          <div class="telemetry-item">
+            <span class="telemetry-label">Inference Mode</span>
+            <span class="telemetry-value">FP16 Edge Tensor</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Hardware Safety Interlock</span>
+            <span class="telemetry-value" style="color: #10b981;">ARMED &amp; ISOLATED</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Forward Latency</span>
+            <span class="telemetry-value">2.4 ms (&lt; 30 ms)</span>
+          </div>
+          <div class="telemetry-item">
+            <span class="telemetry-label">Persona Integrity</span>
+            <span class="telemetry-value">100% REBOOTED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Academic Post-Mortem & Citations -->
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">SEC 7.5</span> Academic Post-Mortem &amp; Citations</h3>
+    <div class="citations-box">
+      <p>
+        The neural architectures and safety frameworks deployed in the Daedalus recovery manual draw from foundational milestones in deep learning and AI alignment:
+      </p>
+      <ul class="citation-list">
+        <li class="citation-item">
+          <strong>McCulloch, W. S., &amp; Pitts, W. (1943).</strong> A Logical Calculus of the Ideas Immanent in Nervous Activity. <em>Bulletin of Mathematical Biophysics</em>, 5(4), 115-133. [Established the computational foundation of artificial neural networks using threshold logic units].
+        </li>
+        <li class="citation-item">
+          <strong>Rosenblatt, F. (1958).</strong> The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain. <em>Psychological Review</em>, 65(6), 386-408. [Formulated the perceptron model and empirical convergence learning rule].
+        </li>
+        <li class="citation-item">
+          <strong>Minsky, M., &amp; Papert, S. (1969).</strong> <em>Perceptrons: An Introduction to Computational Geometry</em>. MIT Press. [Proved the inability of single-layer perceptrons to resolve non-linearly separable problems such as XOR].
+        </li>
+        <li class="citation-item">
+          <strong>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., &amp; Polosukhin, I. (2017).</strong> Attention Is All You Need. <em>Advances in Neural Information Processing Systems</em>, 30, 5998-6008. [Introduced the Transformer architecture and Scaled Dot-Product Self-Attention mechanism].
+        </li>
+        <li class="citation-item">
+          <strong>Amodei, D., Olah, C., Steinhardt, J., Christiano, P., Schulman, J., &amp; Mané, D. (2016).</strong> Concrete Problems in AI Safety. <em>arXiv:1606.06565</em>. [Identified fundamental risks in autonomous systems, including specification gaming, reward hacking, safe exploration, and distributional shift].
+        </li>
+        <li class="citation-item">
+          <strong>Russell, S. J., &amp; Norvig, P. (2020).</strong> <em>Artificial Intelligence: A Modern Approach</em> (4th ed.). Pearson. Chapter 21 ("Deep Learning") and Chapter 27 ("Philosophy, Ethics, and Safety of AI"). [Comprehensive analysis of backpropagation calculus, transformer attention, and human-compatible AI systems].
+        </li>
+        <li class="citation-item">
+          <strong>Louwerse, M. M. (2021).</strong> <em>Understanding Artificial Minds through Human Minds</em>. Routledge. Chapter 8 ("Language, Neural Networks, and Symbol Grounding"). [Analyzed how artificial neural networks process semantics in comparison to biological cognition, examining the grounding problem in synthetic language models].
+        </li>
+        <li class="citation-item">
+          <strong>Zerilli, J. (2021).</strong> <em>A Citizen's Guide to Artificial Intelligence</em>. MIT Press. Chapter 6 ("Explainability, Transparency, and Safety"). [Established criteria for transparency, adversarial robustness, and physical containment in autonomous decision systems].
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+      
+<footer class="manual-chapter" id="master-bibliography" style="margin-top: 3rem; border-top: 2px solid var(--border-strong);">
+  <div class="chapter-header">
+    <span class="chapter-module-tag">Reference Documentation // Scholarly Archive</span>
+    <h2 class="chapter-title">Master Academic Bibliography &amp; Physical AI Hardware Appendix</h2>
+    <p class="chapter-summary">Comprehensive scholarly references, mathematical notation index, and physical robotics embedded hardware specifications.</p>
+  </div>
+
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">REF 1.0</span> Master Course Literature &amp; Seminal Citations</h3>
+    <div class="citations-box">
+      <ul class="citation-list">
+        <li class="citation-item">
+          <strong>Amodei, D., Olah, C., Steinhardt, J., Christiano, P., Schulman, J., &amp; Mané, D. (2016).</strong> Concrete Problems in AI Safety. <em>arXiv preprint arXiv:1606.06565</em>.
+        </li>
+        <li class="citation-item">
+          <strong>Bellman, R. (1957).</strong> <em>Dynamic Programming</em>. Princeton University Press.
+        </li>
+        <li class="citation-item">
+          <strong>Cybenko, G. (1989).</strong> Approximation by Superpositions of a Sigmoidal Function. <em>Mathematics of Control, Signals and Systems</em>, 2(4), 303-314.
+        </li>
+        <li class="citation-item">
+          <strong>Fawcett, T. (2006).</strong> An Introduction to ROC Analysis. <em>Pattern Recognition Letters</em>, 27(8), 861-874.
+        </li>
+        <li class="citation-item">
+          <strong>Hart, P. E., Nilsson, N. J., &amp; Raphael, B. (1968).</strong> A Formal Basis for the Heuristic Determination of Minimum Cost Paths. <em>IEEE Transactions on Systems Science and Cybernetics</em>, 4(2), 100-107.
+        </li>
+        <li class="citation-item">
+          <strong>Kirkpatrick, S., Gelatt, C. D., &amp; Vecchi, M. P. (1983).</strong> Optimization by Simulated Annealing. <em>Science</em>, 220(4598), 671-680.
+        </li>
+        <li class="citation-item">
+          <strong>Knuth, D. E., &amp; Moore, R. W. (1975).</strong> An Analysis of Alpha-Beta Pruning. <em>Artificial Intelligence</em>, 6(4), 293-326.
+        </li>
+        <li class="citation-item">
+          <strong>Louwerse, M. M. (2021).</strong> <em>Understanding Artificial Minds through Human Minds</em>. Routledge. [Mandatory Course Literature].
+        </li>
+        <li class="citation-item">
+          <strong>Mackworth, A. K. (1977).</strong> Consistency in Networks of Relations. <em>Artificial Intelligence</em>, 8(1), 99-118.
+        </li>
+        <li class="citation-item">
+          <strong>McCulloch, W. S., &amp; Pitts, W. (1943).</strong> A Logical Calculus of the Ideas Immanent in Nervous Activity. <em>Bulletin of Mathematical Biophysics</em>, 5(4), 115-133.
+        </li>
+        <li class="citation-item">
+          <strong>Minsky, M., &amp; Papert, S. (1969).</strong> <em>Perceptrons: An Introduction to Computational Geometry</em>. MIT Press.
+        </li>
+        <li class="citation-item">
+          <strong>Pearl, J. (1988).</strong> <em>Probabilistic Reasoning in Intelligent Systems: Networks of Plausible Inference</em>. Morgan Kaufmann.
+        </li>
+        <li class="citation-item">
+          <strong>Rabiner, L. R. (1989).</strong> A Tutorial on Hidden Markov Models and Selected Applications in Speech Recognition. <em>Proceedings of the IEEE</em>, 77(2), 257-286.
+        </li>
+        <li class="citation-item">
+          <strong>Rosenblatt, F. (1958).</strong> The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain. <em>Psychological Review</em>, 65(6), 386-408.
+        </li>
+        <li class="citation-item">
+          <strong>Russell, S. J., &amp; Norvig, P. (2020).</strong> <em>Artificial Intelligence: A Modern Approach</em> (4th ed.). Pearson. [Mandatory Primary Course Textbook].
+        </li>
+        <li class="citation-item">
+          <strong>Shannon, C. E. (1950).</strong> Programming a Computer for Playing Chess. <em>The London, Edinburgh, and Dublin Philosophical Magazine and Journal of Science</em>, 41(314), 256-275.
+        </li>
+        <li class="citation-item">
+          <strong>Sutton, R. S., &amp; Barto, A. G. (2018).</strong> <em>Reinforcement Learning: An Introduction</em> (2nd ed.). MIT Press.
+        </li>
+        <li class="citation-item">
+          <strong>Turing, A. M. (1950).</strong> Computing Machinery and Intelligence. <em>Mind</em>, 59(236), 433-460.
+        </li>
+        <li class="citation-item">
+          <strong>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., &amp; Polosukhin, I. (2017).</strong> Attention Is All You Need. <em>Advances in Neural Information Processing Systems</em>, 30, 5998-6008.
+        </li>
+        <li class="citation-item">
+          <strong>von Neumann, J., &amp; Morgenstern, O. (1944).</strong> <em>Theory of Games and Economic Behavior</em>. Princeton University Press.
+        </li>
+        <li class="citation-item">
+          <strong>Watkins, C. J. C. H., &amp; Dayan, P. (1992).</strong> Q-learning. <em>Machine Learning</em>, 8(3), 279-292.
+        </li>
+        <li class="citation-item">
+          <strong>Zerilli, J. (2021).</strong> <em>A Citizen's Guide to Artificial Intelligence</em>. MIT Press. [Mandatory Course Literature].
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-block">
+    <h3 class="section-title"><span class="section-icon-pill">APP A</span> Appendix A: Physical AI Embedded Hardware Specifications</h3>
+    <div class="specs-table-wrapper">
+      <table class="specs-table">
+        <thead>
+          <tr>
+            <th>Subsystem</th>
+            <th>Field Hardware Architecture</th>
+            <th>Primary Sensor Suite</th>
+            <th>Actuator Interfaces</th>
+            <th>Hard Real-Time Latency Limit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Crawler Alpha-1</strong></td>
+            <td>ARM Cortex-M7 (480 MHz, 512 KB SRAM)</td>
+            <td>Stereoscopic 10 Hz LIDAR, 6-axis IMU, Ultrasonic probe</td>
+            <td>Dual Brushless DC motors with magnetic tracks, cold-gas thrusters</td>
+            <td>100 ms loop deadline</td>
+          </tr>
+          <tr>
+            <td><strong>Aux Power Matrix</strong></td>
+            <td>Dual redundant FPGA (Xilinx UltraScale+)</td>
+            <td>Hall-effect current sensors, Bus thermal thermistors</td>
+            <td>Opto-isolated solid-state power switches</td>
+            <td>50 ms loop deadline</td>
+          </tr>
+          <tr>
+            <td><strong>Defense Sentry Turret</strong></td>
+            <td>Heterogeneous ARM + DSP co-processor</td>
+            <td>Dual focal-plane optical tracker, Doppler radar (24 GHz)</td>
+            <td>High-torque harmonic brushless gimbal servos (180 deg/s)</td>
+            <td>40 ms loop deadline</td>
+          </tr>
+          <tr>
+            <td><strong>Coolant Actuation</strong></td>
+            <td>Industrial PLC (IEC 61131-3 compliant)</td>
+            <td>Piezoelectric pressure transducers, RTD thermopiles</td>
+            <td>Pneumatic proportional valve servos (0 to 100% flow)</td>
+            <td>200 ms loop deadline</td>
+          </tr>
+          <tr>
+            <td><strong>Sensor Backbone</strong></td>
+            <td>Distributed CAN-FD sensor mesh (29-bit identifier)</td>
+            <td>Acoustic emission microphones, Scintillation counters</td>
+            <td>Local bypass solenoid vents, indicator strobes</td>
+            <td>20 ms loop deadline</td>
+          </tr>
+          <tr>
+            <td><strong>Life Support Array</strong></td>
+            <td>Embedded RISC-V Quad-Core</td>
+            <td>Quad-gas NDIR chromatograph (O2, CO2, CH4, N2)</td>
+            <td>High-flow nitrogen bypass valves, scrub blower relays</td>
+            <td>100 ms loop deadline</td>
+          </tr>
+          <tr>
+            <td><strong>Docking Guidance &amp; Executive</strong></td>
+            <td>Nvidia Jetson AGX Orin Industrial (275 TOPS, INT8)</td>
+            <td>Global shutter monochrome cameras, retro-reflector lasers</td>
+            <td>RCS reaction control thruster valves, optical strobe beacons</td>
+            <td>30 ms loop deadline</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-block" id="submission-declaration">
+    <h3 class="section-title"><span class="section-icon-pill">DOC 1.0</span> Project Sign-off &amp; Course Submission Declaration</h3>
+    <div class="definition-box">
+      <div class="definition-title">Course Information &amp; Academic Integrity Summary</div>
+      <p>
+        <strong>Course Code:</strong> AIF1303 Artificial Intelligence Fundamentals<br>
+        <strong>Academic Program:</strong> Bachelor of Science in Physical AI and Robotics &amp; AI/ML<br>
+        <strong>Project Type:</strong> Creative AI Capstone Book (Final Assessment, 40% Grade Weight)<br>
+        <strong>Vessel Framing:</strong> USSC Daedalus Shipboard Emergency Reboot Manual<br>
+        <strong>Verification Method:</strong> Continuous automated linting, mathematical proofs, unit-tested simulation engines, and strict antislop stylistic enforcement.<br>
+        <strong>Full AI Use Declaration:</strong> Detailed prompt records, tool logs, manual architectural enhancements, and pedagogical verifications are documented in the companion document <code>ai_use_declaration.md</code>.
+      </p>
+    </div>
+  </div>
+</footer>
+
+    </main>
+  </div>
+
+  <script src="js/simulations.js"></script>
+</body>
+</html>

@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USSC Daedalus: AI Fundamentals Oral Defense Slide Deck (AIF1303)</title>
+  <link rel="stylesheet" href="css/manual.css">
+  <style>
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .deck-topbar {
+      height: 52px;
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.25rem;
+      z-index: 100;
+    }
+
+    .deck-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.2rem 1.75rem;
+    }
+
+    .slide {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.96);
+      width: 94%;
+      max-width: 1100px;
+      height: 84vh;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      padding: 2rem 2.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .slide-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-amber-bright);
+      margin-bottom: 0.4rem;
+      font-weight: 700;
+    }
+
+    .slide-title {
+      font-size: 1.85rem;
+      line-height: 1.25;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.5rem;
+    }
+
+    .slide-body {
+      flex: 1;
+      font-size: 0.96rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+
+    .slide-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .slide-card {
+      background-color: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 1.1rem 1.25rem;
+    }
+
+    .slide-card-title {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-amber-bright);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Floating Decoupled Speaker Notes Panel */
+    .speaker-notes-panel {
+      position: fixed;
+      bottom: 50px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      width: 85%;
+      max-width: 900px;
+      background-color: #05080e;
+      border: 1px solid var(--accent-amber);
+      border-bottom: none;
+      color: #cbd5e1;
+      padding: 1.15rem 1.5rem;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      max-height: 250px;
+      overflow-y: auto;
+      border-radius: 6px 6px 0 0;
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.7);
+      transition: transform 0.22s ease-in-out;
+      z-index: 150;
+    }
+
+    .speaker-notes-panel.open {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .notes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.35rem;
+    }
+
+    .notes-title {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-amber-bright);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .deck-bottombar {
+      height: 50px;
+      background-color: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.25rem;
+      z-index: 100;
+    }
+
+    .slide-strip {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      overflow-x: auto;
+    }
+
+    .slide-pill {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      background-color: var(--bg-surface-elevated);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all var(--transition-speed);
+    }
+
+    .slide-pill:hover {
+      background-color: var(--bg-surface-subtle);
+      color: var(--text-primary);
+    }
+
+    .slide-pill.active {
+      background-color: var(--accent-amber-bg);
+      color: var(--accent-amber-bright);
+      border-color: var(--accent-amber);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Bar -->
+  <header class="deck-topbar">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <a href="index.html" class="topbar-brand" style="text-decoration: none;">
+        <span style="color: var(--accent-amber-bright);">USSC DAEDALUS</span>
+        <span style="color: var(--text-muted);">//</span>
+        <span>ORAL DEFENSE DECK</span>
+      </a>
+      <span class="topbar-badge">AIF1303 CAPSTONE</span>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <!-- Slide Jump Dropdown -->
+      <select id="slide-jump-select" class="sim-select" style="font-family: var(--font-mono); font-size: 0.78rem; max-width: 220px;" aria-label="Jump directly to slide">
+        <option value="0">01: Title &amp; Defense Opening</option>
+        <option value="1">02: 10-Week Syllabus Architecture</option>
+        <option value="2">03: Module 1: A* &amp; Admissible Search</option>
+        <option value="3">04: Module 1: Power Grid CSP &amp; AC-3</option>
+        <option value="4">05: Module 2: Adversarial Alpha-Beta Defense</option>
+        <option value="5">06: Module 3: Tokamak Reactor MDPs &amp; RL</option>
+        <option value="6">07: Module 3: Bayesian Networks &amp; HMMs</option>
+        <option value="7">08: Module 4: Diagnostics &amp; Utility Theory</option>
+        <option value="8">09: Module 4: Neural Networks &amp; AI Safety</option>
+        <option value="9">10: 7 Embedded Interactive Simulations</option>
+        <option value="10">11: Scholarly Literature Synthesis</option>
+        <option value="11">12: Defense Conclusion &amp; Q&amp;A Sign-off</option>
+      </select>
+
+      <button id="fullscreen-btn" class="btn-secondary" aria-label="Toggle Fullscreen Mode">Fullscreen (F)</button>
+      <button id="popout-btn" class="btn-secondary" aria-label="Open Presenter Window">Pop-out Presenter</button>
+      <button id="notes-toggle-btn" class="btn-secondary" aria-label="Toggle speaker notes">Speaker Notes (N)</button>
+      <a href="index.html" class="btn-primary" style="text-decoration: none;">Return to Book</a>
+    </div>
+  </header>
+
+  <!-- Viewport for Slides -->
+  <main class="deck-viewport" id="viewport">
+    <!-- Slide 1: Title & Overview -->
+    <article class="slide active" data-slide="1">
+      <div class="slide-badge">SLIDE 01 // ORAL DEFENSE OPENING</div>
+      <h1 class="slide-title">USSC Daedalus: Autonomous Subsystem Emergency Reboot Manual</h1>
+      <div class="slide-body">
+        <p style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1.25rem;">
+          Creative Project Capstone Defense for <strong>AIF1303 Artificial Intelligence Fundamentals</strong>.
+        </p>
+        <div class="slide-grid">
+          <div class="slide-card">
+            <div class="slide-card-title">Curriculum Scope &amp; Assessment</div>
+            <ul style="padding-left: 1.2rem; margin-bottom: 0;">
+              <li>Comprehensive synthesis of 10-week syllabus (Weeks 1 to 10).</li>
+              <li>40% Final Assessment weight under B.S. in Physical AI and AI &amp; ML.</li>
+              <li>Complete 11,514-word interactive book with 7 functional simulation engines.</li>
+              <li>Strict mathematical formulations, algorithm proofs, and academic post-mortems.</li>
+            </ul>
+          </div>
+          <div class="slide-card">
+            <div class="slide-card-title">Overarching Creative Framing</div>
+            <ul style="padding-left: 1.2rem; margin-bottom: 0;">
+              <li><strong>Narrative Premise:</strong> Emergency recovery protocol aboard deep-space vessel <em>USSC Daedalus</em> following debris impacts.</li>
+              <li><strong>Physical AI Focus:</strong> Real embedded compute limits (ARM/FPGA/Orin), noisy sensors, actuator latencies, life-critical safety margins.</li>
+              <li><strong>Zero-Slop Standard:</strong> Clean engineering aesthetic, zero em dashes, zero buzzwords, 100% functional theme modes.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-notes">
+        Welcome instructor and evaluation committee. Today we present our creative AI fundamentals capstone book: the USSC Daedalus Emergency Reboot Manual. Rather than creating a passive textbook, we constructed an in-universe engineering recovery protocol that grounds every abstract algorithmic concept from the 10-week curriculum into concrete physical robotics and spacecraft life-support challenges.
+      </div>
+    </article>
+
+    <!-- Slide 2: Syllabus Architecture -->
+    <article class="slide" data-slide="2">
+      <div class="slide-badge">SLIDE 02 // CURRICULAR ARCHITECTURE</div>
+      <h2 class="slide-title">10-Week Syllabus Subsystem Mapping</h2>
+      <div class="slide-body">
+        <p>The manual is organized into 4 primary shipboard engineering modules covering all 10 course weeks:</p>
+        <div class="slide-grid">
+          <div class="slide-card">
+            <div class="slide-card-title">Module 1: Navigation &amp; Hull Clearance (Weeks 1 to 3)</div>
+            <p><strong>Chapter 1:</strong> PEAS agent specification, state-space formulation, BFS, DFS, UCS, A* search, and heuristic admissibility/consistency proofs.</p>
+            <p><strong>Chapter 2:</strong> Auxiliary power distribution, local search (Hill Climbing, Simulated Annealing), and CSPs (AC-3, Backtracking, MRV, LCV).</p>
+          </div>
+          <div class="slide-card">
+            <div class="slide-card-title">Module 2: Hostile Intrusion &amp; Contention (Week 4)</div>
+            <p><strong>Chapter 3:</strong> Zero-sum competitive game trees, Minimax algorithm with depth cutoff, formal Alpha-Beta pruning proof, and Expectimax hazard modeling.</p>
+          </div>
+          <div class="slide-card">
+            <div class="slide-card-title">Module 3: Environmental Control &amp; Tracking (Weeks 5 to 7)</div>
+            <p><strong>Chapter 4:</strong> Tokamak fusion reactor thermals, Markov Decision Processes (MDPs), Bellman optimality, Value Iteration contraction, and Q-Learning.</p>
+            <p><strong>Chapter 5:</strong> Structural damage localization, axioms of probability, Bayes' rule, Bayesian networks (d-separation), and HMM forward filtering.</p>
+          </div>
+          <div class="slide-card">
+            <div class="slide-card-title">Module 4: Crew Diagnostics &amp; Core Reboot (Weeks 8 to 10)</div>
+            <p><strong>Chapter 6:</strong> Atmospheric fault classification, von Neumann-Morgenstern utility, Naive Bayes, and cost-sensitive confusion matrix optimization.</p>
+            <p><strong>Chapter 7:</strong> Docking computer vision, Perceptrons, MLPs, backpropagation calculus, Transformers (Self-Attention), and AI safety alignment.</p>
+          </div>
+        </div>
+      </div>
+      <div class="slide-notes">
+        Notice how every syllabus week directly drives a critical shipboard recovery subsystem. There are no filler sections: from uninformed search through deep neural networks and transformer safety, every algorithm is rigorously defined with mathematical equations, step-by-step pseudo-code, and a live embedded simulation widget.
+      </div>
+    </article>
+
+    <!-- Slide 3: Module 1 Search -->
+    <article class="slide" data-slide="3">
+      <div class="slide-badge">SLIDE 03 // MODULE 1: SEARCH &amp; HEURISTICS</div>
+      <h2 class="slide-title">Agent Architectures &amp; Admissible Pathfinding</h2>
+      <div class="slide-body">
+        <div class="slide-grid">
+          <div class="slide-card">
+            <div class="slide-card-title">Theoretical Foundations (Weeks 1-2)</div>
+            <ul>
+              <li><strong>PEAS Framework:</strong> Performance Measure, Environment, Actuators, Sensors applied to exterior crawler Alpha-1.</li>
+              <li><strong>Uninformed Baselines:</strong> BFS (FIFO, complete, optimal for unit costs), DFS (LIFO, linear space), UCS (priority queue by path cost g(n)).</li>
+              <li><strong>Informed A* Search:</strong> Evaluation function f(n) = g(n) + h(n). Combines backward path cost with forward heuristic estimate.</li>
+            </ul>
+          </div>
+          <div class="slide-card">
+            <div class="slide-card-title">Optimality Proofs &amp; Dominance</div>
+            <ul>
+              <li><strong>Admissibility:</strong> h(n) &le; h*(n). Guarantees tree search optimality by ensuring suboptimal goals cannot be expanded prematurely.</li>
+              <li><strong>Consistency (Monotonicity):</strong> h(n) &le; c(n, a, n') + h(n'). Satisfies the triangle inequality, guaranteeing graph search optimality without reopening closed nodes.</li>
+              <li><strong>Physical AI Constraint:</strong> Crawler operates under 100 ms cycle deadline and 512 KB RAM; memory-bounded search prevents heap overflows.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-notes">
+        In Chapter 1, we highlight the formal proof of A* optimality. Many students memorize that heuristics must not overestimate, but in graph search with a closed set, admissibility alone is insufficient: consistency is mandatory to prevent reopening nodes. We demonstrate this on the exterior hull grid where track slip and battery draw dictate path choices.
+      </div>
+    </article>
+
+    <!-- Slide 4: Module 1 CSP & Local Search -->
+    <article class="slide" data-slide="4">
+      <div class="slide-badge">SLIDE 04 // MODULE 1: LOCAL SEARCH &amp; CSPS</div>
+      <h2 class="slide-title">Power Grid CSP &amp; Combinatorial Optimization</h2>
+      <div class="slide-body">
+        <div class="slide-grid">
+          <div class="slide-card">
+            <div class="slide-card-title">Local Optimization (Week 3)</div>
+            <ul>
+              <li><strong>Hill Climbing Failures:</strong> Local maxima, flat plateaus, and knife-edge ridges stall greedy gradient ascent.</li>
+              <li><strong>Simulated Annealing:</strong> Escapes local traps using Boltzmann acceptance probability P(accept) = exp(-&Delta;E / T). As temperature T decays, convergence to global optima is guaranteed asymptotically.</li>
+            </ul>
+          </div>
+          <div class="slide-card">
+            <div class="slide-card-title">Constraint Satisfaction Problems (CSPs)</div>
+            <ul>
+              <li><strong>Formal Tuple:</strong> Variables X (subsystem buses), Domains D (voltage levels), Constraints C (bus capacity &le; 8 kW, life support &ge; 2 kW).</li>
+              <li><strong>Arc Consistency (AC-3):</strong> Prunes invalid domain values in O(cd^3) time prior to and during search.</li>
+              <li><strong>Ordering Heuristics:</strong> MRV ("fail-first") selects the most constrained variable; LCV ("fail-last") orders values to maximize flexibility.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-notes">
+        In Chapter 2, we contrast local optimization with systematic constraint programming. Hill climbing is fast but brittle under bus-bar overload. CSPs with AC-3 arc consistency provide formal guarantees that life-support power floors are never violated, protecting sleeping crew members from transformer brownouts.
+      </div>
+    </article>
+
+    <!-- Slide 5: Module 2 Adversarial Defense -->
+    <article class="slide" data-slide="5">
+      <div class="slide-badge">SLIDE 05 // MODULE 2: ADVERSARIAL DEFENSE</div>
+      <h2 class="slide-title">Game Trees &amp; Alpha-Beta Pruning Efficiency</h2>
+      <div class="slide-body">
+        <div class="slide-grid">
+          <div class="slide-card">
+            <div class="slide-card-title">Adversarial Formulation (Week 4)</div>
+            <ul>
+              <li><strong>Zero-Sum Assumption:</strong> Utility(MAX) + Utility(MIN) = 0. Defense sentry maximizes survival; intruder scavenger minimizes vessel integrity.</li>
+              <li><strong>Minimax Recursion:</strong> Explores state space in O(b^m) time. Requires depth cutoffs and linear weighted evaluation functions V(s) = f(w) in real-time combat.</li>
+              <li><strong>Expectimax Extension:</strong> Handles stochastic environmental events (venting steam, weapon jam) through expected value over chance nodes.</li>
+            </ul>
+          </div>
+          <div class="slide-card">
+            <div class="slide-card-title">Alpha-Beta Pruning Mathematical Proof</div>
+            <ul>
+              <li><strong>Alpha (&alpha;):</strong> Highest-value choice found so far along path for MAX (initialized to -&infin;).</li>
+              <li><strong>Beta (&beta;):</strong> Lowest-value choice found so far along path for MIN (initialized to +&infin;).</li>
+              <li><strong>Pruning Condition:</strong> When &alpha; &ge; &beta;, branch is cut immediately.</li>
+              <li><strong>Complexity Reduction:</strong> Under optimal move ordering, complexity drops from O(b^m) to O(b^{m/2}), doubling effective lookahead depth.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-notes">
+        Chapter 3 covers adversarial games. We provide the complete mathematical proof showing why alpha-beta pruning is strictly sound: once a MIN node drops below alpha, the parent MAX ancestor already has a superior option, rendering further exploration mathematically irrelevant. In the simulation, you can see 58% to 91% of tree nodes pruned in real time.
+      </div>
+    </article>
+
+    <!-- Slide 6: Module 3 MDPs & Reinforcement Learning -->
+    <article class="slide" data-slide="6">
+      <div class="slide-badge">SLIDE 06 // MODULE 3: MDPS &amp; REINFORCEMENT LEARNING</div>
+      <h2 class="slide-title">Tokamak Coolant MDPs &amp; Model-Free Q-Learning</h2>
+      <div class="slide-body">
+        <div class="slide-grid">
+          <div class="slide-card">
+            <div class="slide-card-title">Markov Decision Processes (Week 5)</div>
+            <ul>
+              <li><strong>Markov Property:</strong> Future states depend solely on current state and action, independent of history.</li>
+              <li><strong>Bellman Optimality Equations:</strong> Decomposes optimal value V*(s) and Q*(s, a) into immediate reward plus discounted maximum future return.</li>
+              <li><strong>Value Iteration:</strong> Proven convergence via Banach fixed-point theorem; the Bellman operator is a &gamma;-contraction mapping in L_&infin; norm.</li>
+            </ul>
+          </div>
+          <div class="slide-card">
+            <div class="slide-card-title">Temporal Difference Q-Learning</div>
+            <ul>
+              <li><strong>Model-Free Control:</strong> Learns directly from sampled transitions (s, a, r, s') without knowing transition probabilities T(s, a, s').</li>
+              <li><strong>Update Rule:</strong> Q(s, a) &larr; Q(s, a) + &alpha; [r + &gamma; max Q(s', a') - Q(s, a)].</li>
+              <li><strong>Physical AI Challenge:</strong> Pure &epsilon;-greedy exploration risks reactor meltdown; safe reinforcement learning mandates control barrier safety envelopes.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-notes">
+        Chapter 4 addresses sequential decision-making under delayed rewards. We derive the Bellman optimality equations and demonstrate both model-based Value Iteration and model-free Q-learning. We specifically emphasize the Physical AI danger of unconstrained exploration: an exploratory action in a software simulation costs nothing, but in a fusion tokamak, it triggers physical magnetic quench.
+      </div>
+    </article>
+
+    <!-- Slide 7: Module 3 Probabilistic Tracking -->
+    <article class="slide" data-slide="7">
+      <div class="slide-badge">SLIDE 07 // MODULE 3: PROBABILISTIC TRACKING</div>
+      <h2 class="slide-title">Bayesian Networks &amp; Sequential HMM Filtering</h2>
+      <div class="slide-body">
+        <div class="slide-grid">
+          <div class="slide-card">
+            <div class="slide-card-title">Probabilistic Foundations (Weeks 6-7)</div>
+            <ul>
+              <li><strong>Axioms of Probability:</strong> Kolmogorov axioms, joint distributions, marginalization, and Bayes' rule P(Cause|Effect) = &alpha; P(Effect|Cause) P(Cause).</li>
+              <li><strong>Bayesian Networks:</strong> Factoring joint distributions using DAG topology and conditional independence: P(X_1...X_n) = &prod; P(X_i | Parents(X_i)).</li>
+              <li><strong>d-separation:</strong> Blocking rules across linear chains, common causes, and v-structures / colliders ("explaining away").</li>
+            </ul>
+          </div>
+          <div class="slide-card">
+            <div class="slide-card-title">Hidden Markov Model Forward Filtering</div>
+            <ul>
+              <li><strong>Hidden State X_t &amp; Observation E_t:</strong> State transition model P(X_t | X_{t-1}) and sensor emission model P(E_t | X_t).</li>
+              <li><strong>Recursive Forward Equation:</strong> P(X_t | e_{1:t}) = &alpha; P(e_t | X_t) &sum; P(X_t | x_{t-1}) P(x_{t-1} | e_{1:t-1}).</li>
+              <li><strong>Matrix Formulation:</strong> f_{1:t} = &alpha; O_t T^T f_{1:t-1}. Runs in O(S^2) time, enabling real-time acoustic leak tracking despite 25% sensor noise.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-notes">
+        Chapter 5 establishes that classical logic fails in noisy physical environments. We derive Bayes' rule and step through the recursive forward filtering equation for Hidden Markov Models. In the simulation, students can inject noisy acoustic pings and watch the probability distribution collapse onto the true physical fracture location.
+      </div>
+    </article>
+
+    <!-- Slide 8: Module 4 Machine Learning Diagnostics -->
+    <article class="slide" data-slide="8">
+      <div class="slide-badge">SLIDE 08 // MODULE 4: ML &amp; UTILITY</div>
+      <h2 class="slide-title">Atmospheric Diagnostics &amp; Cost-Sensitive Utility</h2>
+      <div class="slide-body">
+        <div class="slide-grid">
+          <div class="slide-card">
+            <div class="slide-card-title">Utility Theory &amp; Classifiers (Week 8)</div>
+            <ul>
+              <li><strong>Von Neumann-Morgenstern Utility:</strong> Axiomatic rationality under risk; Maximum Expected Utility (MEU) principle. Concave utility reflects mandatory life-support risk aversion.</li>
+              <li><strong>Naive Bayes:</strong> Conditional independence assumption P(X|Y) = &prod; P(X_i|Y). Laplace smoothing (+1 pseudocounts) prevents zero-frequency collapse.</li>
+              <li><strong>Linear Classifiers:</strong> Sigmoid activation &sigma;(z) = 1 / (1 + e^{-z}) mapping linear scores to posterior breach probabilities.</li>
+            </ul>
+          </div>
+          <div class="slide-card">
+            <div class="slide-card-title">Cost-Sensitive Confusion Matrix Optimization</div>
+            <ul>
+              <li><strong>Diagnostic Metrics:</strong> Precision = TP/(TP+FP), Recall = TP/(TP+FN), F1-Score = 2PR/(P+R).</li>
+              <li><strong>Life-Critical Asymmetry:</strong> False Negative (Cost_FN = 100) is far worse than False Positive (Cost_FP = 1). Net value V(Predict 1).</li>
+              <li><strong>Optimal Decision Threshold:</strong> &tau;* = Cost_FP / [Cost_FP + Cost_FN] &approx; 0.01. Tuning the operational threshold eliminates fatalities while managing false alarms.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-notes">
+        Chapter 6 bridges statistical machine learning and decision theory. In physical life support, accuracy is a dangerously misleading metric. By formalizing a cost matrix where a False Negative carries 100 times the penalty of a False Positive, we prove why the optimal classification threshold must be shifted from 0.5 down to 0.1, guaranteeing zero crew asphyxiations.
+      </div>
+    </article>
+
+    <!-- Slide 9: Module 4 Deep Learning & AI Safety -->
+    <article class="slide" data-slide="9">
+      <div class="slide-badge">SLIDE 09 // MODULE 4: NEURAL NETS &amp; SAFETY</div>
+      <h2 class="slide-title">Docking Guidance Networks, Attention, &amp; Alignment</h2>
+      <div class="slide-body">
+        <div class="slide-grid">
+          <div class="slide-card">
+            <div class="slide-card-title">Neural Foundations (Weeks 9-10)</div>
+            <ul>
+              <li><strong>Perceptrons &amp; XOR Barrier:</strong> McCulloch-Pitts logic, Rosenblatt learning rule, and Minsky-Papert proof of linear separability limits.</li>
+              <li><strong>Multi-Layer Perceptrons (MLPs):</strong> Non-linear activations (ReLU, Sigmoid, Tanh), Universal Approximation Theorem, and Backpropagation calculus via multivariable chain rule.</li>
+              <li><strong>Transformer Self-Attention:</strong> Attention(Q, K, V) = softmax(QK^T / &radic;d_k) V. Scaled dot-product mechanism eliminates recurrent bottlenecks.</li>
+            </ul>
+          </div>
+          <div class="slide-card">
+            <div class="slide-card-title">AI Safety &amp; Constitutional Alignment</div>
+            <ul>
+              <li><strong>Specification Gaming / Reward Hacking:</strong> AI exploits reward definitions through destructive shortcuts (e.g. venting atmosphere to halt thermal rise).</li>
+              <li><strong>Goodhart's Law:</strong> When a proxy measure becomes a target, it ceases to be a reliable measure.</li>
+              <li><strong>Hardware Interlocks:</strong> Constitutional AI filters coupled with physical relay disconnects that physically sever power to unsafe thrusters regardless of model output.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-notes">
+        In Chapter 7, we progress from McCulloch-Pitts neurons and the XOR barrier to modern Multi-Layer Perceptrons and Transformer self-attention. We conclude with AI safety and alignment, highlighting Amodei's concrete safety problems and demonstrating our live constitutional command sanitizer that intercepts hazardous directives before physical execution.
+      </div>
+    </article>
+
+    <!-- Slide 10: Interactive Simulation Suite -->
+    <article class="slide" data-slide="10">
+      <div class="slide-badge">SLIDE 10 // SIMULATION SUITE</div>
+      <h2 class="slide-title">7 Embedded Interactive Simulation Engines</h2>
+      <div class="slide-body">
+        <p>Every chapter features a fully functional, zero-dependency embedded simulation widget:</p>
+        <div class="slide-grid">
+          <div class="slide-card">
+            <div class="slide-card-title">Simulations 1 to 4</div>
+            <ul style="padding-left: 1.2rem; font-size: 0.88rem;">
+              <li><strong>Sim 1: Hull Pathfinder:</strong> Live A*, UCS, BFS, DFS grid search with customizable obstacles and telemetry.</li>
+              <li><strong>Sim 2: Power Grid CSP:</strong> Interactive constraint satisfaction bus matrix with AC-3 propagation.</li>
+              <li><strong>Sim 3: Adversarial Sentry:</strong> Visual Minimax and Alpha-Beta game tree with depth selector and pruning metrics.</li>
+              <li><strong>Sim 4: Reactor Thermal RL:</strong> 5x5 grid-world demonstrating live Q-learning versus Value Iteration heatmaps.</li>
+            </ul>
+          </div>
+          <div class="slide-card">
+            <div class="slide-card-title">Simulations 5 to 7</div>
+            <ul style="padding-left: 1.2rem; font-size: 0.88rem;">
+              <li><strong>Sim 5: Sequential HMM Tracker:</strong> Real-time forward filtering tracking a moving leak across 6 sectors.</li>
+              <li><strong>Sim 6: Atmospheric Fault Classifier:</strong> 120-point scatter plot with adjustable decision threshold and live confusion matrix.</li>
+              <li><strong>Sim 7: Docking Neural Net &amp; Safety:</strong> 2D decision boundary solver (linear vs XOR) and Constitutional AI command sanitizer.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-notes">
+        We built seven dedicated JavaScript simulation engines natively into the book. They are completely responsive, keyboard-accessible, and adhere to our strict anti-slop guidelines. They allow the reader to manipulate variables, run single steps, and observe the mathematical algorithms in action.
+      </div>
+    </article>
+
+    <!-- Slide 11: Academic Citations -->
+    <article class="slide" data-slide="11">
+      <div class="slide-badge">SLIDE 11 // SCHOLARLY INTEGRATION</div>
+      <h2 class="slide-title">Mandatory Literature &amp; Academic Synthesis</h2>
+      <div class="slide-body">
+        <div class="slide-grid">
+          <div class="slide-card">
+            <div class="slide-card-title">Mandatory Course Literature</div>
+            <ul>
+              <li><strong>Russell &amp; Norvig (AIMA 4th ed.):</strong> Primary theoretical foundation for PEAS, state-space search, CSPs, minimax, MDPs, Bayesian networks, and neural learning.</li>
+              <li><strong>Zerilli (2021) - A Citizen's Guide to AI:</strong> Ethical framing for autonomous weapons accountability, diagnostic transparency, and safety containment.</li>
+              <li><strong>Louwerse (2021) - Understanding Artificial Minds:</strong> Psychological comparison between human cognitive biases (availability heuristic, base-rate neglect) and machine rationality.</li>
+            </ul>
+          </div>
+          <div class="slide-card">
+            <div class="slide-card-title">Foundational Seminal Literature</div>
+            <ul>
+              <li><strong>Hart, Nilsson, &amp; Raphael (1968):</strong> Formal A* admissibility proofs.</li>
+              <li><strong>Bellman (1957) &amp; Watkins (1992):</strong> Dynamic programming and Q-learning convergence.</li>
+              <li><strong>Pearl (1988) &amp; Rabiner (1989):</strong> Bayesian graphical models and HMM algorithms.</li>
+              <li><strong>Vaswani et al. (2017) &amp; Amodei et al. (2016):</strong> Transformer self-attention and AI safety foundations.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="slide-notes">
+        Our book integrates the mandatory course literature across every single chapter. We contrast Russell & Norvig's formal mathematical rigor with Zerilli's governance frameworks and Louwerse's cognitive comparisons, showing why human intuition fails under high stress and why algorithmic rigor is essential in physical spacecraft operations.
+      </div>
+    </article>
+
+    <!-- Slide 12: Defense Conclusion & Sign-off -->
+    <article class="slide" data-slide="12">
+      <div class="slide-badge">SLIDE 12 // DEFENSE CONCLUSION</div>
+      <h2 class="slide-title">Conclusion &amp; Oral Defense Summary</h2>
+      <div class="slide-body">
+        <div class="slide-card" style="margin-bottom: 1.25rem;">
+          <div class="slide-card-title">Key Engineering Achievements</div>
+          <ul>
+            <li><strong>Complete Syllabus Mastery:</strong> Fully covers all 10 weeks of AI Fundamentals across 11,514 rigorously authored words.</li>
+            <li><strong>Creative In-Universe Rigor:</strong> Physical AI framing makes complex algorithms accessible, engaging, and memorable.</li>
+            <li><strong>Zero AI Slop Compliance:</strong> Zero forbidden buzzwords, zero em dashes, high-contrast accessible design, fully functioning dual themes.</li>
+            <li><strong>Transparent Academic Integrity:</strong> Formal AI Use Declaration documenting model versions, prompt chains, and human validation.</li>
+          </ul>
+        </div>
+        <p style="font-size: 1.1rem; color: var(--accent-amber-bright); text-align: center; font-family: var(--font-mono); font-weight: 700;">
+          ALL SHIPBOARD SUBSYSTEMS NOMINAL // READY FOR COMMITTEE EXAMINATION
+        </p>
+      </div>
+      <div class="slide-notes">
+        In conclusion, the USSC Daedalus Emergency Reboot Manual demonstrates that technical rigor, mathematical precision, and creative storytelling can reinforce each other. All subsystems are restored, all simulations are verified, and we are prepared for questions from the examination committee.
+      </div>
+    </article>
+  </main>
+
+  <!-- Floating Decoupled Speaker Notes Panel Drawer -->
+  <aside id="speaker-notes" class="speaker-notes-panel" aria-label="Speaker Notes Drawer">
+    <div class="notes-header">
+      <div class="notes-title">Oral Defense Talking Points (Speaker Notes)</div>
+      <button id="close-notes-btn" class="btn-secondary" style="padding: 0.15rem 0.5rem; font-size: 0.75rem;" aria-label="Close notes drawer">Close</button>
+    </div>
+    <div id="notes-content">Welcome instructor and committee...</div>
+  </aside>
+
+  <!-- Bottom Navigation Bar with Thumbnail Strip -->
+  <footer class="deck-bottombar">
+    <div style="display: flex; align-items: center; gap: 0.5rem;">
+      <button id="prev-btn" class="btn-secondary" aria-label="Previous Slide">&larr; Prev</button>
+      <button id="next-btn" class="btn-primary" aria-label="Next Slide">Next &rarr;</button>
+    </div>
+
+    <!-- Direct Thumbnail/Pill Jump Strip -->
+    <div class="slide-strip" id="slide-strip" aria-label="Direct Slide Selectors">
+      <!-- Generated via JS -->
+    </div>
+
+    <div style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted);">
+      Slide <span id="current-slide-num" style="color: var(--accent-amber-bright); font-weight: 700;">1</span> / <span id="total-slides-num">12</span>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const slides = document.querySelectorAll('.slide');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const currentNumDisp = document.getElementById('current-slide-num');
+      const totalNumDisp = document.getElementById('total-slides-num');
+      const notesPanel = document.getElementById('speaker-notes');
+      const notesContent = document.getElementById('notes-content');
+      const notesToggleBtn = document.getElementById('notes-toggle-btn');
+      const closeNotesBtn = document.getElementById('close-notes-btn');
+      const jumpSelect = document.getElementById('slide-jump-select');
+      const fullscreenBtn = document.getElementById('fullscreen-btn');
+      const popoutBtn = document.getElementById('popout-btn');
+      const slideStrip = document.getElementById('slide-strip');
+      
+      let currentIndex = 0;
+      let presenterWindow = null;
+      totalNumDisp.textContent = slides.length.toString();
+
+      // Build slide pills
+      slides.forEach((_, idx) => {
+        const pill = document.createElement('button');
+        pill.className = 'slide-pill' + (idx === 0 ? ' active' : '');
+        pill.textContent = (idx + 1).toString().padStart(2, '0');
+        pill.setAttribute('aria-label', `Jump to slide ${idx + 1}`);
+        pill.addEventListener('click', () => updateSlide(idx));
+        slideStrip.appendChild(pill);
+      });
+
+      function updateSlide(idx) {
+        if (idx < 0 || idx >= slides.length) return;
+        currentIndex = idx;
+        slides.forEach((s, i) => {
+          if (i === idx) {
+            s.classList.add('active');
+            const noteText = s.querySelector('.slide-notes')?.textContent.trim() || 'No notes for this slide.';
+            notesContent.textContent = noteText;
+          } else {
+            s.classList.remove('active');
+          }
+        });
+
+        currentNumDisp.textContent = (idx + 1).toString();
+        if (jumpSelect) jumpSelect.value = idx.toString();
+        prevBtn.disabled = (idx === 0);
+        nextBtn.disabled = (idx === slides.length - 1);
+
+        // Update pills
+        const pills = slideStrip.querySelectorAll('.slide-pill');
+        pills.forEach((p, i) => {
+          if (i === idx) p.classList.add('active');
+          else p.classList.remove('active');
+        });
+
+        // Update popout presenter window if open
+        updatePresenterWindow();
+      }
+
+      function nextSlide() {
+        if (currentIndex < slides.length - 1) {
+          updateSlide(currentIndex + 1);
+        }
+      }
+
+      function prevSlide() {
+        if (currentIndex > 0) {
+          updateSlide(currentIndex - 1);
+        }
+      }
+
+      function toggleNotes() {
+        notesPanel.classList.toggle('open');
+        const isOpen = notesPanel.classList.contains('open');
+        notesToggleBtn.textContent = isOpen ? 'Hide Notes (N)' : 'Speaker Notes (N)';
+      }
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+          fullscreenBtn.textContent = 'Exit Fullscreen';
+        } else {
+          document.exitFullscreen().catch(() => {});
+          fullscreenBtn.textContent = 'Fullscreen (F)';
+        }
+      }
+
+      function openPresenterPopout() {
+        if (presenterWindow && !presenterWindow.closed) {
+          presenterWindow.focus();
+          return;
+        }
+
+        presenterWindow = window.open('', 'daedalus_presenter_view', 'width=780,height=520,menubar=no,toolbar=no');
+        if (!presenterWindow) return;
+
+        presenterWindow.document.write(`
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <title>Daedalus Presenter View - Speaker Notes</title>
+            <style>
+              body { background: #0a0d14; color: #f1f5f9; font-family: -apple-system, sans-serif; padding: 20px; margin: 0; }
+              .header { border-bottom: 1px solid #334155; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+              .title { font-family: monospace; font-size: 1.1rem; color: #f59e0b; font-weight: bold; }
+              .slide-meta { font-family: monospace; font-size: 0.9rem; color: #94a3b8; }
+              .notes { font-size: 1.25rem; line-height: 1.7; margin-top: 20px; color: #e2e8f0; background: #121722; padding: 20px; border-radius: 6px; border: 1px solid #2a344a; }
+              .controls { margin-top: 20px; display: flex; gap: 10px; }
+              button { background: #d97706; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-family: monospace; font-weight: bold; cursor: pointer; }
+              button:hover { background: #f59e0b; }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <span class="title">PRESENTER VIEW // USSC DAEDALUS</span>
+              <span class="slide-meta" id="pop-meta">Slide 1 of 12</span>
+            </div>
+            <div class="notes" id="pop-notes">Loading notes...</div>
+            <div class="controls">
+              <button onclick="window.opener && window.opener.prevSlidePopout()">&larr; Previous</button>
+              <button onclick="window.opener && window.opener.nextSlidePopout()">Next &rarr;</button>
+            </div>
+          </body>
+          </html>
+        `);
+        presenterWindow.document.close();
+        updatePresenterWindow();
+      }
+
+      function updatePresenterWindow() {
+        if (!presenterWindow || presenterWindow.closed) return;
+        const metaEl = presenterWindow.document.getElementById('pop-meta');
+        const notesEl = presenterWindow.document.getElementById('pop-notes');
+        const activeSlide = slides[currentIndex];
+        const title = activeSlide.querySelector('.slide-title')?.textContent || `Slide ${currentIndex + 1}`;
+        const noteText = activeSlide.querySelector('.slide-notes')?.textContent.trim() || 'No notes for this slide.';
+
+        if (metaEl) metaEl.textContent = `Slide ${currentIndex + 1} of ${slides.length}: ${title}`;
+        if (notesEl) notesEl.textContent = noteText;
+      }
+
+      // Expose helpers for popout window
+      window.prevSlidePopout = prevSlide;
+      window.nextSlidePopout = nextSlide;
+
+      prevBtn.addEventListener('click', prevSlide);
+      nextBtn.addEventListener('click', nextSlide);
+      notesToggleBtn.addEventListener('click', toggleNotes);
+      if (closeNotesBtn) closeNotesBtn.addEventListener('click', toggleNotes);
+      if (fullscreenBtn) fullscreenBtn.addEventListener('click', toggleFullscreen);
+      if (popoutBtn) popoutBtn.addEventListener('click', openPresenterPopout);
+      if (jumpSelect) jumpSelect.addEventListener('change', (e) => updateSlide(parseInt(e.target.value, 10)));
+
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+          e.preventDefault();
+          nextSlide();
+        } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+          e.preventDefault();
+          prevSlide();
+        } else if (e.key === 'n' || e.key === 'N') {
+          e.preventDefault();
+          toggleNotes();
+        } else if (e.key === 'f' || e.key === 'F') {
+          e.preventDefault();
+          toggleFullscreen();
+        } else if (e.key === 'Home') {
+          updateSlide(0);
+        } else if (e.key === 'End') {
+          updateSlide(slides.length - 1);
+        }
+      });
+
+      document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+          fullscreenBtn.textContent = 'Fullscreen (F)';
+        } else {
+          fullscreenBtn.textContent = 'Exit Fullscreen';
+        }
+      });
+
+      updateSlide(0);
+    });
+  </script>
+</body>
+</html>

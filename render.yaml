@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: ai-fundamentals-endterm
+    runtime: static
+    buildCommand: python3 scripts/build_book.py
+    staticPublishPath: .
