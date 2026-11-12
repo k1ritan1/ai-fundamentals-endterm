@@ -119,189 +119,189 @@ function initSearchPalette() {
 
   const searchIndex = [
     {
-      title: 'Module 1: Exterior Hull Breach Avoidance Routing',
+      title: 'Chapter 1: Sensory Array & Space Mapping',
       desc: 'PEAS framework, state space formulation, BFS, DFS, UCS, A* search, and heuristic admissibility.',
-      href: '#module-1',
+      href: '#chapter-1',
       keywords: 'navigation uninformed informed search manhattan euclidean distance peas optimal completeness'
     },
     {
       title: 'Algorithm: A* Search Algorithm',
       desc: 'Heuristic-guided tree and graph search using f(n) = g(n) + h(n) with priority queue frontier.',
-      href: '#module-1',
+      href: '#chapter-1',
       keywords: 'astar heuristic evaluation priority queue graph search admissible consistent'
     },
     {
       title: 'Algorithm: Uniform-Cost Search (UCS / Dijkstra)',
       desc: 'Cost-optimal pathfinding exploring lowest path cost g(n) across non-uniform traversal weights.',
-      href: '#module-1',
+      href: '#chapter-1',
       keywords: 'ucs dijkstra path cost uniform optimal'
     },
     {
-      title: 'Module 2: Structural Grid Load Balancing',
+      title: 'Chapter 2: Auxiliary Power Distribution under Constraint',
       desc: 'Constraint Satisfaction Problems (CSPs), variable domains, AC-3 arc consistency, and MRV backtracking.',
-      href: '#module-2',
+      href: '#chapter-2',
       keywords: 'power routing constraints csp backtracking mrv lcv arc consistency ac3 local search hill climbing'
     },
     {
       title: 'Algorithm: AC-3 Arc Consistency Algorithm',
       desc: 'Constraint propagation algorithm pruning inconsistent domain values across directed binary arcs.',
-      href: '#module-2',
+      href: '#chapter-2',
       keywords: 'ac3 arc consistency domain reduction queue binary constraint'
     },
     {
       title: 'Algorithm: Backtracking Search with MRV & LCV',
       desc: 'Depth-first constraint search augmented with Minimum Remaining Values and Least Constraining Value.',
-      href: '#module-2',
+      href: '#chapter-2',
       keywords: 'backtracking mrv lcv heuristic fail first most constrained variable'
     },
     {
-      title: 'Module 3: Subsystem Defense Protocols',
+      title: 'Chapter 3: Subsystem Defense Protocols',
       desc: 'Adversarial search, zero-sum matrix games, minimax decision rules, and alpha-beta pruning cutoffs.',
-      href: '#module-3',
+      href: '#chapter-3',
       keywords: 'security hostile intrusion minimax alphabeta expectimax game tree adversarial zero sum'
     },
     {
       title: 'Algorithm: Minimax & Alpha-Beta Pruning',
       desc: 'Recursive optimal adversarial decision-making with alpha and beta bounding condition (alpha >= beta).',
-      href: '#module-3',
+      href: '#chapter-3',
       keywords: 'minimax alphabeta pruning optimal cutoff terminal state sentry intruder'
     },
     {
       title: 'Algorithm: Expectimax Search with Chance Nodes',
       desc: 'Adversarial decision formulation accounting for environmental stochasticity and probabilistic transitions.',
-      href: '#module-3',
+      href: '#chapter-3',
       keywords: 'expectimax chance nodes probability uncertainty stochastic'
     },
     {
-      title: 'Module 4: Reactor Temperature Regulation',
+      title: 'Chapter 4: Reactor Temperature Regulation & Drive Dynamics',
       desc: 'Markov Decision Processes (MDPs), Bellman optimality equations, value iteration, and Q-learning.',
-      href: '#module-4',
+      href: '#chapter-4',
       keywords: 'tokamak cooling mdp markov decision process bellman value iteration reinforcement learning q learning'
     },
     {
       title: 'Algorithm: Value Iteration & Bellman Optimality',
       desc: 'Dynamic programming value convergence computing optimal state values V*(s) over discount gamma.',
-      href: '#module-4',
+      href: '#chapter-4',
       keywords: 'value iteration dynamic programming bellman convergence policy extraction'
     },
     {
       title: 'Algorithm: Temporal Difference Q-Learning',
       desc: 'Model-free reinforcement learning updating action-utility values Q(s, a) via TD temporal error.',
-      href: '#module-4',
+      href: '#chapter-4',
       keywords: 'q learning model free temporal difference td error epsilon greedy exploration'
     },
     {
-      title: 'Module 5: Environmental Sensor Tracking',
+      title: 'Chapter 5: Structural Damage Localization & Sensor Tracking',
       desc: 'Conditional probability, Bayes rule, Bayesian belief networks, and Hidden Markov Models (HMMs).',
-      href: '#module-5',
+      href: '#chapter-5',
       keywords: 'sensor noise radiation tracking bayes bayesian networks hmm forward filtering belief state'
     },
     {
       title: 'Algorithm: HMM Forward Algorithm (Filtering)',
       desc: 'Sequential state belief estimation combining transition and emission probability distributions.',
-      href: '#module-5',
+      href: '#chapter-5',
       keywords: 'forward algorithm filtering hidden markov model emission transition recursive belief'
     },
     {
       title: 'Concept: Bayesian Networks & D-Separation',
       desc: 'Directed acyclic graphical models encoding conditional independence and joint distributions.',
-      href: '#module-5',
+      href: '#chapter-5',
       keywords: 'bayesian network dag d separation conditional independence conditional probability table cpt'
     },
     {
-      title: 'Module 6: Atmospheric Recirculation Diagnostics',
+      title: 'Chapter 6: Atmospheric Decompression Classification & Utility',
       desc: 'Supervised machine learning, Naive Bayes, linear classifiers, confusion matrix, precision and recall.',
-      href: '#module-6',
+      href: '#chapter-6',
       keywords: 'life support oxygen scrubbers machine learning naive bayes logistic regression precision recall roc auc'
     },
     {
       title: 'Algorithm: Naive Bayes Classification',
       desc: 'Generative classification combining class priors and feature likelihoods under conditional independence.',
-      href: '#module-6',
+      href: '#chapter-6',
       keywords: 'naive bayes prior likelihood posterior maximum a posteriori map'
     },
     {
       title: 'Concept: Asymmetric Cost Matrices & Risk Optimization',
       desc: 'Utility-theoretic evaluation penalizing false negative life support failures over false alarms.',
-      href: '#module-6',
+      href: '#chapter-6',
       keywords: 'confusion matrix cost false negative false positive type 1 type 2 precision recall f1 score'
     },
     {
-      title: 'Module 7: Autonomous Docking Guidance & Core Safety',
+      title: 'Chapter 7: Docking Guidance Neural Networks & AI Safety',
       desc: 'Perceptrons, multi-layer artificial neural networks, backpropagation, LLMs, and AI safety containment.',
-      href: '#module-7',
+      href: '#chapter-7',
       keywords: 'optical docking guidance perceptron neural network deep learning backprop llm generative ai safety alignment'
     },
     {
       title: 'Algorithm: Perceptron Learning Rule & Gradient Descent',
       desc: 'Iterative weight updates for linearly separable hyperplane classification and cross-entropy loss.',
-      href: '#module-7',
+      href: '#chapter-7',
       keywords: 'perceptron weights bias activation function gradient descent backpropagation'
     },
     {
       title: 'Concept: AI Alignment & Containment Protocols',
       desc: 'Instrumental convergence, specification gaming, RLHF, constitutional safety filters, and hard cutoffs.',
-      href: '#module-7',
+      href: '#chapter-7',
       keywords: 'alignment safety ethics containment rlhf constitutional ai override kill switch'
     },
     {
       title: 'Hardware Specification: Neuromorphic Processing Unit (NPU-4)',
       desc: 'Daedalus onboard compute specs: 1,024 tensor cores, FP16 execution, and radiation-shielded buses.',
-      href: '#module-7',
+      href: '#master-bibliography',
       keywords: 'hardware npu neuromorphic tensor core fp16 spec clock compute'
     },
     {
       title: 'Simulation 1: Exterior Hull Pathfinding Simulator',
       desc: 'Interactive grid navigation testing BFS, DFS, UCS, and A* path costs in real-time.',
-      href: '#sim1-container',
+      href: '#chapter-1',
       keywords: 'simulation pathfinding grid interactive visualizer'
     },
     {
       title: 'Simulation 2: Power Grid Constraint Solver',
       desc: 'Interactive AC-3 constraint propagation and backtracking solver for power routing.',
-      href: '#sim2-container',
+      href: '#chapter-2',
       keywords: 'simulation csp power grid ac3 interactive'
     },
     {
       title: 'Simulation 3: Minimax Tactical Defense Tree',
       desc: 'Interactive Alpha-Beta game tree with node hover inspection, alpha/beta bounds, and pruning telemetry.',
-      href: '#sim3-container',
+      href: '#chapter-3',
       keywords: 'simulation minimax alphabeta game tree interactive svg tooltip'
     },
     {
       title: 'Simulation 4: Tokamak Reactor RL Agent',
       desc: 'Interactive Q-learning agent discovering optimal magnetic confinement cooling policies.',
-      href: '#sim4-container',
+      href: '#chapter-4',
       keywords: 'simulation reinforcement learning qlearning tokamak gridworld'
     },
     {
       title: 'Simulation 5: HMM Sensor Tracking Simulator',
       desc: 'Interactive forward filtering engine resolving noisy radiation emissions into true ship coordinates.',
-      href: '#sim5-container',
+      href: '#chapter-5',
       keywords: 'simulation hmm sensor tracking filter belief'
     },
     {
       title: 'Simulation 6: Atmospheric Classifier Engine',
       desc: 'Interactive decision boundary tuner and real-time confusion matrix for scrubber health.',
-      href: '#sim6-container',
+      href: '#chapter-6',
       keywords: 'simulation machine learning classification boundary roc'
     },
     {
       title: 'Simulation 7: Docking Guidance Neural Network',
       desc: 'Interactive perceptron learning hyperplane separation for optical thruster alignment.',
-      href: '#sim7-container',
+      href: '#chapter-7',
       keywords: 'simulation neural network perceptron decision boundary'
     },
     {
       title: 'Course AI Declaration Form',
       desc: 'Mandatory academic integrity disclosure documenting models, prompt logs, and verification methods.',
-      href: '#ai-declaration',
+      href: '#submission-declaration',
       keywords: 'declaration integrity ethics prompt documentation submission'
     },
     {
       title: 'Academic Literature & Citations',
       desc: 'References to Russell & Norvig, Zerilli, Louwerse, Sutton & Barto, and primary AI research.',
-      href: '#module-1',
+      href: '#master-bibliography',
       keywords: 'bibliography citations russell norvig zerilli louwerse academic sources'
     }
   ];
@@ -390,7 +390,7 @@ function initSearchPalette() {
     filteredResults = [...searchIndex];
     selectedIndex = 0;
     renderResults();
-    setTimeout(() => input.focus(), 50);
+    setTimeout(() => { if (input && input.focus) input.focus(); }, 50);
   }
 
   function closeModal() {
@@ -2175,11 +2175,17 @@ function initFullscreen() {
   const textEl = document.getElementById('fullscreen-text');
   fullBtn.addEventListener('click', () => {
     if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
+      const req = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen || document.documentElement.msRequestFullscreen;
+      if (req) {
+        try { req.call(document.documentElement).catch(() => {}); } catch(e) {}
+      }
       if (textEl) textEl.textContent = 'Window';
       else fullBtn.innerHTML = '&#x26F6; Window';
     } else {
-      document.exitFullscreen().catch(() => {});
+      const exit = document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen;
+      if (exit) {
+        try { exit.call(document).catch(() => {}); } catch(e) {}
+      }
       if (textEl) textEl.textContent = 'Full';
       else fullBtn.innerHTML = '&#x26F6; Full';
     }
@@ -2295,8 +2301,6 @@ function initPanelToggle() {
       e.preventDefault();
       togglePanels();
     }
-  });
-}
   });
 }
 
