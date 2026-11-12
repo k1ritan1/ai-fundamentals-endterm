@@ -870,6 +870,61 @@ body.panels-hidden .panel-restore-pill {
   }
 }
 
+/* ==========================================================================
+   MODULE GROUPING HEADER BANNER (Avionics Major Stage Divider)
+   ========================================================================== */
+.module-group-header {
+  position: relative;
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.08) 0%, rgba(15, 20, 28, 0.88) 100%);
+  border-left: 4px solid var(--accent-amber);
+  border-top: 1px solid var(--border-strong);
+  border-right: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-strong);
+  border-radius: 4px;
+  padding: 1.75rem 2rem;
+  margin-top: 4.5rem;
+  margin-bottom: 2.25rem;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  scroll-margin-top: calc(var(--topbar-height) + 1.5rem);
+}
+
+.module-group-header:first-of-type {
+  margin-top: 2rem;
+}
+
+[data-theme="light"] .module-group-header {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.06) 0%, rgba(248, 250, 252, 0.95) 100%);
+  border-top-color: #cbd5e1;
+  border-right-color: #cbd5e1;
+  border-bottom-color: #cbd5e1;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.module-group-badge {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--accent-amber-bright);
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+}
+
+.module-group-title {
+  font-size: 1.65rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.module-group-desc {
+  font-size: 0.94rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 820px;
+}
+
 /* Chapter Directive Frame with Precision Corner Crosshairs */
 .chapter-directive {
   position: relative;

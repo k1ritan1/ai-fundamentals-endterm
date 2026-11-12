@@ -27,7 +27,7 @@ CH3_HTML = r"""
           <td>Sentry Fire-Control System</td>
           <td>PCIe Gen3 x4</td>
           <td>4 Ply Real-Time</td>
-          <td>Alpha-Beta (alpha >= beta)</td>
+          <td>Alpha-Beta ($\alpha \ge \beta$)</td>
           <td>Kinetic Defense Turrets &amp; Gimbal Servos</td>
         </tr>
       </tbody>
@@ -56,7 +56,7 @@ CH3_HTML = r"""
     <h3 class="section-title"><span class="section-icon-pill">SEC 3.2</span> Theoretical Foundation &amp; Mathematical Formulation</h3>
     
     <p>
-      In single-agent search (such as \\(A^*\\)), the environment is passive: the agent plans a trajectory through a static or stochastic world that does not actively attempt to frustrate its objectives. In adversarial environments, multiple agents possess conflicting utility functions.
+      In single-agent search (such as \(A^*\)), the environment is passive: the agent plans a trajectory through a static or stochastic world that does not actively attempt to frustrate its objectives. In adversarial environments, multiple agents possess conflicting utility functions.
     </p>
 
     <div class="definition-box">
@@ -66,41 +66,41 @@ CH3_HTML = r"""
       </p>
       <div class="math-block">
       $$
-      \\langle S_0, \\text{Player}(s), \\text{Actions}(s), \\text{Result}(s, a), \\text{Terminal-Test}(s), \\text{Utility}(s, p) \\rangle
+      \langle S_0, \text{Player}(s), \text{Actions}(s), \text{Result}(s, a), \text{Terminal-Test}(s), \text{Utility}(s, p) \rangle
       $$
     </div>
       <ul>
-        <li><strong>Initial State \\(S_0\\):</strong> The starting physical layout of sentry turrets and intruder drones in Cargo Bay 3.</li>
-        <li><strong>Player Function \\(\\text{Player}(s)\\):</strong> Defines whose turn it is to act (\\(\\text{MAX}\\) representing ship sentry defense; \\(\\text{MIN}\\) representing the hostile scavenger).</li>
-        <li><strong>Actions \\(\\text{Actions}(s)\\):</strong> The set of legal maneuvers or firing solutions available to the active player in state \\(s\\).</li>
-        <li><strong>Transition Model \\(\\text{Result}(s, a)\\):</strong> Returns the resulting state after executing action \\(a\\).</li>
-        <li><strong>Terminal Test \\(\\text{Terminal-Test}(s)\\):</strong> True if the engagement is resolved (e.g., intruder destroyed or cryogenic line severed); false otherwise.</li>
-        <li><strong>Utility Function \\(\\text{Utility}(s, p)\\):</strong> A numeric payoff function for player \\(p\\) at terminal state \\(s\\). In zero-sum games: \\(\\text{Utility}_{\\text{MAX}}(s) + \\text{Utility}_{\\text{MIN}}(s) = 0\\).</li>
+        <li><strong>Initial State \(S_0\):</strong> The starting physical layout of sentry turrets and intruder drones in Cargo Bay 3.</li>
+        <li><strong>Player Function \(\text{Player}(s)\):</strong> Defines whose turn it is to act (\(\text{MAX}\) representing ship sentry defense; \(\text{MIN}\) representing the hostile scavenger).</li>
+        <li><strong>Actions \(\text{Actions}(s)\):</strong> The set of legal maneuvers or firing solutions available to the active player in state \(s\).</li>
+        <li><strong>Transition Model \(\text{Result}(s, a)\):</strong> Returns the resulting state after executing action \(a\).</li>
+        <li><strong>Terminal Test \(\text{Terminal-Test}(s)\):</strong> True if the engagement is resolved (e.g., intruder destroyed or cryogenic line severed); false otherwise.</li>
+        <li><strong>Utility Function \(\text{Utility}(s, p)\):</strong> A numeric payoff function for player \(p\) at terminal state \(s\). In zero-sum games: \(\text{Utility}_{\text{MAX}}(s) + \text{Utility}_{\text{MIN}}(s) = 0\).</li>
       </ul>
     </div>
 
     <p>
-      The Minimax algorithm computes the optimal strategy for \\(\\text{MAX}\\) under the fundamental assumption that \\(\\text{MIN}\\) plays with perfect rationality to minimize \\(\\text{MAX}\\) payoff. The recursive minimax value \\(V(s)\\) is expressed as:
+      The Minimax algorithm computes the optimal strategy for \(\text{MAX}\) under the fundamental assumption that \(\text{MIN}\) plays with perfect rationality to minimize \(\text{MAX}\) payoff. The recursive minimax value \(V(s)\) is expressed as:
     </p>
 
     <div class="math-block">
       $$
-      V(s) = \\begin{cases} 
-      \\text{Utility}(s) & \\text{if } \\text{Terminal-Test}(s) \\\\
-      \\max_{a \\in \\text{Actions}(s)} V(\\text{Result}(s, a)) & \\text{if } \\text{Player}(s) = \\text{MAX} \\\\
-      \\min_{a \\in \\text{Actions}(s)} V(\\text{Result}(s, a)) & \\text{if } \\text{Player}(s) = \\text{MIN}
-      \\end{cases}
+      V(s) = \begin{cases} 
+      \text{Utility}(s) & \text{if } \text{Terminal-Test}(s) \\
+      \max_{a \in \text{Actions}(s)} V(\text{Result}(s, a)) & \text{if } \text{Player}(s) = \text{MAX} \\
+      \min_{a \in \text{Actions}(s)} V(\text{Result}(s, a)) & \text{if } \text{Player}(s) = \text{MIN}
+      \end{cases}
       $$
       <div class="formula-label">Equation 3.1: The Minimax Value Function</div>
     </div>
 
     <p>
-      A full minimax traversal over a game tree with branching factor \\(b\\) and maximum depth \\(m\\) requires \\(O(b^m)\\) time and \\(O(bm)\\) memory. In physical combat with a 40-millisecond cycle deadline, searching to terminal depth is impossible. The engine must truncate search at a fixed cutoff depth \\(d\\) and apply a linear weighted evaluation function \\(V_{\\text{eval}}(s) = f(\\mathbf{w})\\):
+      A full minimax traversal over a game tree with branching factor \(b\) and maximum depth \(m\) requires \(O(b^m)\) time and \(O(bm)\) memory. In physical combat with a 40-millisecond cycle deadline, searching to terminal depth is impossible. The engine must truncate search at a fixed cutoff depth \(d\) and apply a linear weighted evaluation function \(V_{\text{eval}}(s) = f(\mathbf{w})\):
     </p>
 
     <div class="math-block">
       $$
-      V_{\\text{eval}}(s) = f(\\mathbf{w}) = \\mathbf{w}^T \\mathbf{f}(s) = \\sum_{i=1}^{k} w_i f_i(s) = w_1 (\\text{Intruder Distance}) + w_2 (\\text{Turret Line-of-Sight}) + w_3 (\\text{Ammunition Reserve})
+      V_{\text{eval}}(s) = f(\mathbf{w}) = \mathbf{w}^T \mathbf{f}(s) = \sum_{i=1}^{k} w_i f_i(s) = w_1 (\text{Intruder Distance}) + w_2 (\text{Turret Line-of-Sight}) + w_3 (\text{Ammunition Reserve})
       $$
       <div class="formula-label">Equation 3.2: Linear Weighted Evaluation Function for Real-Time Cutoff</div>
     </div>
@@ -111,25 +111,25 @@ CH3_HTML = r"""
         Alpha-Beta pruning computes the exact minimax decision while pruning subtrees that cannot influence the final root value. The algorithm tracks two parameters along the search path:
       </p>
       <ul>
-        <li><strong>\\(\\alpha\\):</strong> The value of the best (highest-value) choice found so far along the path for \\(\\text{MAX}\\). Initialized to \\(-\\infty\\).</li>
-        <li><strong>\\(\\beta\\):</strong> The value of the best (lowest-value) choice found so far along the path for \\(\\text{MIN}\\). Initialized to \\(+\\infty\\).</li>
+        <li><strong>\(\alpha\):</strong> The value of the best (highest-value) choice found so far along the path for \(\text{MAX}\). Initialized to \(-\infty\).</li>
+        <li><strong>\(\beta\):</strong> The value of the best (lowest-value) choice found so far along the path for \(\text{MIN}\). Initialized to \(+\infty\).</li>
       </ul>
       <p>
         <strong>Pruning Condition:</strong> At any point during tree traversal, whenever:
       </p>
       <div class="math-block">
       $$
-      \\alpha \\ge \\beta
+      \alpha \ge \beta
       $$
     </div>
       <p>
         the remaining child branches of the current node are pruned immediately.
       </p>
       <p>
-        <em>Proof:</em> Consider a \\(\\text{MIN}\\) node \\(n\\) where \\(v \\le \\alpha\\). The parent \\(\\text{MAX}\\) ancestor already has an alternative path guaranteeing a payoff of at least \\(\\alpha\\). Because \\(n\\) is controlled by \\(\\text{MIN}\\), its value can only decrease further as remaining children are evaluated. Therefore, \\(\\text{MAX}\\) will never choose the branch leading to \\(n\\). Exploring further children of \\(n\\) cannot alter the decision at the parent, proving the pruning is strictly conservative and sound.
+        <em>Proof:</em> Consider a \(\text{MIN}\) node \(n\) where \(v \le \alpha\). The parent \(\text{MAX}\) ancestor already has an alternative path guaranteeing a payoff of at least \(\alpha\). Because \(n\) is controlled by \(\text{MIN}\), its value can only decrease further as remaining children are evaluated. Therefore, \(\text{MAX}\) will never choose the branch leading to \(n\). Exploring further children of \(n\) cannot alter the decision at the parent, proving the pruning is strictly conservative and sound.
       </p>
       <p>
-        <strong>Pruning Efficiency:</strong> With arbitrary move ordering, alpha-beta examines \\(O(b^{3m/4})\\) nodes. Under <em>perfect move ordering</em> (where the best move is always evaluated first), time complexity drops to:
+        <strong>Pruning Efficiency:</strong> With arbitrary move ordering, alpha-beta examines \(O(b^{3m/4})\) nodes. Under <em>perfect move ordering</em> (where the best move is always evaluated first), time complexity drops to:
       </p>
       <div class="math-block">
       $$
@@ -142,18 +142,18 @@ CH3_HTML = r"""
     </div>
 
     <p>
-      When the environment includes stochastic elements (such as debris deflection, turret jamming, or venting atmospheric gas), the Expectimax algorithm replaces deterministic \\(\\text{MIN}\\) nodes with chance nodes:
+      When the environment includes stochastic elements (such as debris deflection, turret jamming, or venting atmospheric gas), the Expectimax algorithm replaces deterministic \(\text{MIN}\) nodes with chance nodes:
     </p>
 
     <div class="math-block">
       $$
-      V_{\\text{Expectimax}}(s) = \\sum_{s'} P(s' \\mid s, a) V_{\\text{Expectimax}}(s')
+      V_{\text{Expectimax}}(s) = \sum_{s'} P(s' \mid s, a) V_{\text{Expectimax}}(s')
       $$
       <div class="formula-label">Equation 3.3: Expectimax Formulation over Chance Nodes</div>
     </div>
 
     <p>
-      Unlike Minimax, which is invariant to positive monotonic transformations of the evaluation function, Expectimax values depend strictly on positive affine transformations: \\(U'(s) = c_1 U(s) + c_2\\) where \\(c_1 > 0\\). Non-linear scaling distorts expected values, altering the resulting physical actions.
+      Unlike Minimax, which is invariant to positive monotonic transformations of the evaluation function, Expectimax values depend strictly on positive affine transformations: \(U'(s) = c_1 U(s) + c_2\) where \(c_1 > 0\). Non-linear scaling distorts expected values, altering the resulting physical actions.
     </p>
   </div>
 
@@ -226,7 +226,7 @@ function MIN_VALUE(state, alpha, beta, depth, max_depth):
           <tr>
             <th>Search Algorithm</th>
             <th>Search Depth Achievable (40 ms budget)</th>
-            <th>Node Expansions at \\(b=4, d=4\\)</th>
+            <th>Node Expansions at \(b=4, d=4\)</th>
             <th>Pruning Savings</th>
             <th>Optimality Guarantee</th>
           </tr>
@@ -278,7 +278,7 @@ function MIN_VALUE(state, alpha, beta, depth, max_depth):
   <div class="section-block">
     <h3 class="section-title"><span class="section-icon-pill">SEC 3.4</span> Interactive Simulation Module: Adversarial Defense Tree Visualizer</h3>
     <p>
-      The interactive visualizer below renders the adversarial game tree for Cargo Bay 3 defense. Green nodes represent sentry \\(\\text{MAX}\\) decisions; amber nodes represent intruder \\(\\text{MIN}\\) decisions. Toggle between Standard Minimax and Alpha-Beta Pruning to observe how branch pruning slashes node evaluations while preserving optimal tactical outcomes.
+      The interactive visualizer below renders the adversarial game tree for Cargo Bay 3 defense. Green nodes represent sentry \(\text{MAX}\) decisions; amber nodes represent intruder \(\text{MIN}\) decisions. Toggle between Standard Minimax and Alpha-Beta Pruning to observe how branch pruning slashes node evaluations while preserving optimal tactical outcomes.
     </p>
 
     <div class="sim-container">

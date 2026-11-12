@@ -122,7 +122,7 @@ SIDEBAR_HTML = """
     <span>Operational Briefing</span>
   </a>
 
-  <div class="nav-group-title">Module 1: Navigation &amp; Hull Clearance</div>
+  <div class="nav-group-title">Module 1: Navigation &amp; Clearance</div>
   <a href="#chapter-1" class="nav-link">
     <span class="nav-chapter-num">CH 1</span>
     <span>Sensory Array &amp; Space Mapping</span>
@@ -130,38 +130,38 @@ SIDEBAR_HTML = """
   </a>
   <a href="#chapter-2" class="nav-link">
     <span class="nav-chapter-num">CH 2</span>
-    <span>Breach Avoidance Routing</span>
-    <span class="nav-status-pill">[ONLINE]</span>
-  </a>
-
-  <div class="nav-group-title">Module 2: Power &amp; Subsystem Defense</div>
-  <a href="#chapter-3" class="nav-link">
-    <span class="nav-chapter-num">CH 3</span>
     <span>Power Grid Allocation CSP</span>
     <span class="nav-status-pill">[ONLINE]</span>
   </a>
-  <a href="#chapter-4" class="nav-link">
-    <span class="nav-chapter-num">CH 4</span>
+
+  <div class="nav-group-title">Module 2: Subsystem Defense &amp; Contention</div>
+  <a href="#chapter-3" class="nav-link">
+    <span class="nav-chapter-num">CH 3</span>
     <span>Subsystem Defense Protocols</span>
     <span class="nav-status-pill">[ONLINE]</span>
   </a>
 
   <div class="nav-group-title">Module 3: Environmental Control &amp; Tracking</div>
-  <a href="#chapter-5" class="nav-link">
-    <span class="nav-chapter-num">CH 5</span>
+  <a href="#chapter-4" class="nav-link">
+    <span class="nav-chapter-num">CH 4</span>
     <span>Reactor Coolant RL &amp; MDPs</span>
     <span class="nav-status-pill">[ONLINE]</span>
   </a>
-  <a href="#chapter-6" class="nav-link">
-    <span class="nav-chapter-num">CH 6</span>
+  <a href="#chapter-5" class="nav-link">
+    <span class="nav-chapter-num">CH 5</span>
     <span>Sensor Damage &amp; Tracking HMMs</span>
     <span class="nav-status-pill">[ONLINE]</span>
   </a>
 
   <div class="nav-group-title">Module 4: Diagnostics &amp; Core Reboot</div>
+  <a href="#chapter-6" class="nav-link">
+    <span class="nav-chapter-num">CH 6</span>
+    <span>Atmospheric Classification &amp; Utility</span>
+    <span class="nav-status-pill">[ONLINE]</span>
+  </a>
   <a href="#chapter-7" class="nav-link">
     <span class="nav-chapter-num">CH 7</span>
-    <span>Autonomous Diagnostics &amp; Safety</span>
+    <span>Autonomous Guidance &amp; AI Safety</span>
     <span class="nav-status-pill">[ONLINE]</span>
   </a>
 
@@ -175,6 +175,38 @@ SIDEBAR_HTML = """
     <span>Course AI Use Declaration</span>
   </a>
 </nav>
+"""
+
+MODULE1_BANNER = """
+<div class="module-group-header" id="module-1">
+  <div class="module-group-badge">MODULE 1 // WEEKS 1-3 // PROTOCOL: NAV-CLR-01</div>
+  <h2 class="module-group-title">Module 1: Navigation, Search, &amp; Clearance</h2>
+  <p class="module-group-desc">Autonomous crawler agent architectures, formal state-space exploration, heuristic breach avoidance routing, and auxiliary power grid load distribution under constraint satisfaction.</p>
+</div>
+"""
+
+MODULE2_BANNER = """
+<div class="module-group-header" id="module-2">
+  <div class="module-group-badge">MODULE 2 // WEEK 4 // PROTOCOL: DEF-MMX-02</div>
+  <h2 class="module-group-title">Module 2: Subsystem Defense &amp; Contention</h2>
+  <p class="module-group-desc">Cargo bay sentry defense, zero-sum game trees, recursive minimax mechanics, real-time alpha-beta cutoff pruning, and stochastic expectimax decision models under combat latency constraints.</p>
+</div>
+"""
+
+MODULE3_BANNER = """
+<div class="module-group-header" id="module-3">
+  <div class="module-group-badge">MODULE 3 // WEEKS 5-7 // PROTOCOL: ENV-RL-03</div>
+  <h2 class="module-group-title">Module 3: Environmental Control, Planning, &amp; Tracking</h2>
+  <p class="module-group-desc">Tokamak reactor coolant regulation, Markov Decision Processes, temporal difference Q-learning, sequential sensor damage inference, and Hidden Markov Models under high-radiation noise.</p>
+</div>
+"""
+
+MODULE4_BANNER = """
+<div class="module-group-header" id="module-4">
+  <div class="module-group-badge">MODULE 4 // WEEKS 8-10 // PROTOCOL: DIA-SAF-04</div>
+  <h2 class="module-group-title">Module 4: Diagnostics, Machine Learning, &amp; Core Safety</h2>
+  <p class="module-group-desc">Atmospheric life-support classification, asymmetric risk utility theory, optical docking neural networks, transformer core reconstruction, and fail-safe AI alignment containment cutoffs.</p>
+</div>
 """
 
 SEARCH_MODAL_HTML = """
@@ -246,11 +278,15 @@ HTML_TEMPLATE = f"""<!DOCTYPE html>
 
     <main class="main-content">
       {FRONTMATTER_HTML}
+      {MODULE1_BANNER}
       {CH1_HTML}
       {CH2_HTML}
+      {MODULE2_BANNER}
       {CH3_HTML}
+      {MODULE3_BANNER}
       {CH4_HTML}
       {CH5_HTML}
+      {MODULE4_BANNER}
       {CH6_HTML}
       {CH7_HTML}
       {BACKMATTER_HTML}
