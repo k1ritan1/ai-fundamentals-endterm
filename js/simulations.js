@@ -44,7 +44,16 @@ function initTheme() {
 function updateThemeButton(theme) {
   const btn = document.getElementById('theme-toggle');
   if (!btn) return;
-  btn.textContent = theme === 'dark' ? 'Theme: Dark HUD' : 'Theme: Light Lab';
+  const text = document.getElementById('theme-text');
+  const icon = document.getElementById('theme-icon');
+  if (text) {
+    text.textContent = theme === 'dark' ? 'Dark' : 'Light';
+  } else {
+    btn.textContent = theme === 'dark' ? 'Theme: Dark HUD' : 'Theme: Light Lab';
+  }
+  if (icon) {
+    icon.innerHTML = theme === 'dark' ? '&#9681;' : '&#9728;';
+  }
   btn.setAttribute('aria-label', `Current theme is ${theme}. Click to switch theme.`);
 }
 
@@ -2163,13 +2172,16 @@ function initAvionicsAudio() {
 function initFullscreen() {
   const fullBtn = document.getElementById('fullscreen-btn');
   if (!fullBtn) return;
+  const textEl = document.getElementById('fullscreen-text');
   fullBtn.addEventListener('click', () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(() => {});
-      fullBtn.innerHTML = '&#x26F6; Windowed';
+      if (textEl) textEl.textContent = 'Window';
+      else fullBtn.innerHTML = '&#x26F6; Window';
     } else {
       document.exitFullscreen().catch(() => {});
-      fullBtn.innerHTML = '&#x26F6; Fullscreen';
+      if (textEl) textEl.textContent = 'Full';
+      else fullBtn.innerHTML = '&#x26F6; Full';
     }
   });
 }
@@ -2197,12 +2209,14 @@ window.copyCode = function(btn) {
 function initPanelToggle() {
   const panelToggleBtn = document.getElementById('panel-toggle-btn');
   const panelRestoreBtn = document.getElementById('panel-restore-btn');
+  const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
   const panelToggleText = document.getElementById('panel-toggle-text');
   const panelToggleIcon = document.getElementById('panel-toggle-icon');
+  const sidebar = document.getElementById('sidebar');
 
   function updatePanelUI(isHidden) {
     if (panelToggleText) {
-      panelToggleText.textContent = isHidden ? 'Panels: OFF' : 'Panels: ON';
+      panelToggleText.textContent = isHidden ? 'Sidebar: OFF' : 'Sidebar';
     }
     if (panelToggleIcon) {
       panelToggleIcon.innerHTML = isHidden ? '&#x25F1;' : '&#x25F0;';
@@ -2210,12 +2224,12 @@ function initPanelToggle() {
     if (panelToggleBtn) {
       if (isHidden) {
         panelToggleBtn.classList.add('active');
-        panelToggleBtn.setAttribute('title', 'Restore navigation panel (Hotkey: [ )');
-        panelToggleBtn.setAttribute('aria-label', 'Restore navigation panel (Hotkey: [ )');
+        panelToggleBtn.setAttribute('title', 'Restore navigation sidebar (Hotkey: [ )');
+        panelToggleBtn.setAttribute('aria-label', 'Restore navigation sidebar (Hotkey: [ )');
       } else {
         panelToggleBtn.classList.remove('active');
-        panelToggleBtn.setAttribute('title', 'Hide navigation panel (Hotkey: [ )');
-        panelToggleBtn.setAttribute('aria-label', 'Hide navigation panel (Hotkey: [ )');
+        panelToggleBtn.setAttribute('title', 'Hide navigation sidebar (Hotkey: [ )');
+        panelToggleBtn.setAttribute('aria-label', 'Hide navigation sidebar (Hotkey: [ )');
       }
     }
   }
@@ -2238,13 +2252,21 @@ function initPanelToggle() {
   }
 
   function togglePanels() {
-    const isHidden = document.body.classList.contains('panels-hidden');
-    setPanelsHidden(!isHidden);
+    if (window.innerWidth <= 1024) {
+      if (sidebar) {
+        sidebar.classList.toggle('open');
+        const expanded = sidebar.classList.contains('open');
+        if (panelToggleBtn) panelToggleBtn.setAttribute('aria-expanded', expanded.toString());
+      }
+    } else {
+      const isHidden = document.body.classList.contains('panels-hidden');
+      setPanelsHidden(!isHidden);
+    }
   }
 
   // Restore saved preference
   const savedPreference = localStorage.getItem('daedalus_panels_hidden') === 'true';
-  if (savedPreference) {
+  if (savedPreference && window.innerWidth > 1024) {
     setPanelsHidden(true);
   } else {
     updatePanelUI(false);
@@ -2256,6 +2278,15 @@ function initPanelToggle() {
   if (panelRestoreBtn) {
     panelRestoreBtn.addEventListener('click', () => setPanelsHidden(false));
   }
+  if (sidebarCloseBtn) {
+    sidebarCloseBtn.addEventListener('click', () => {
+      if (window.innerWidth <= 1024) {
+        if (sidebar) sidebar.classList.remove('open');
+      } else {
+        setPanelsHidden(true);
+      }
+    });
+  }
 
   // Keyboard shortcut listener: '[' or 'Alt+P' or 'Ctrl+B'
   window.addEventListener('keydown', (e) => {
@@ -2264,6 +2295,8 @@ function initPanelToggle() {
       e.preventDefault();
       togglePanels();
     }
+  });
+}
   });
 }
 

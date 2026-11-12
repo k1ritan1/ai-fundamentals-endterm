@@ -44,37 +44,58 @@
 <body>
   
 <header class="topbar">
-  <div style="display: flex; align-items: center; gap: 0.75rem;">
-    <button id="menu-toggle" class="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">&#9776;</button>
+  <div class="topbar-left">
+    <button id="panel-toggle-btn" class="sidebar-toggle-btn" aria-label="Toggle navigation sidebar (Hotkey: [ )" title="Toggle navigation sidebar (Hotkey: [ )">
+      <span id="panel-toggle-icon" class="toggle-icon">&#x25F0;</span>
+      <span id="panel-toggle-text">Sidebar</span>
+    </button>
     <a href="#overview" class="topbar-brand">
       <span class="status-beacon"></span>
-      <span style="color: var(--accent-amber-bright);">USSC DAEDALUS</span>
-      <span style="color: var(--text-muted);">//</span>
-      <span>EMERGENCY MANUAL</span>
+      <span class="brand-title">USSC DAEDALUS</span>
+      <span class="brand-divider">//</span>
+      <span class="brand-subtitle">EMERGENCY MANUAL</span>
     </a>
   </div>
-  <div class="topbar-telemetry-strip">
-    <span class="telemetry-tag">STAGE 4 // DECK REBOOT</span>
-    <span id="live-met-clock" class="telemetry-tag">MET: +142d 08:34:12</span>
-    <span class="telemetry-tag" style="color: var(--status-nominal-bright);">INTEGRITY: 88.4%</span>
+
+  <div class="topbar-center">
+    <button id="search-palette-btn" class="topbar-search-box" aria-label="Search manual documentation (Hotkey: Cmd+K / Ctrl+K)" title="Quick Search (Cmd+K / Ctrl+K)">
+      <span class="search-box-icon">&#128269;</span>
+      <span class="search-box-placeholder">Search manual, algorithms, specs...</span>
+      <kbd class="search-box-kbd">&#8984;K</kbd>
+    </button>
+    <div class="topbar-telemetry-strip">
+      <span id="live-met-clock" class="telemetry-tag" title="Mission Elapsed Time">MET: +142d</span>
+      <span class="telemetry-tag tag-nominal" title="Subsystem Integrity">88.4%</span>
+    </div>
   </div>
-  <div class="topbar-actions">
-    <button id="panel-toggle-btn" class="btn-secondary" aria-label="Toggle navigation panel (Hotkey: [ )" title="Toggle navigation panel (Hotkey: [ )">
-      <span id="panel-toggle-icon">&#x25F0;</span>
-      <span id="panel-toggle-text">Panels: ON</span>
-    </button>
-    <button id="audio-toggle-btn" class="btn-secondary" aria-label="Toggle avionics sound effects">
-      <span id="audio-icon">&#128263;</span>
-      <span>SFX: OFF</span>
-    </button>
-    <button id="search-palette-btn" class="btn-secondary" aria-label="Open search index command palette">
-      <span style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--accent-amber-bright); font-weight: bold;">&#8984;K</span>
-      <span>Search</span>
-    </button>
-    <button id="theme-toggle" class="btn-secondary" aria-label="Toggle Dark and Light theme">Theme: Dark HUD</button>
-    <button id="fullscreen-btn" class="btn-secondary" aria-label="Toggle Fullscreen">&#x26F6; Fullscreen</button>
-    <a href="presentation.html" class="btn-secondary" target="_blank" rel="noopener">Defense Deck</a>
-    <a href="#submission-declaration" class="btn-primary">AI Declaration</a>
+
+  <div class="topbar-right">
+    <div class="topbar-control-group" role="group" aria-label="System Controls">
+      <button id="audio-toggle-btn" class="btn-control" aria-label="Toggle avionics audio effects" title="Toggle audio feedback chirps">
+        <span id="audio-icon">&#128263;</span>
+        <span class="control-label">SFX: OFF</span>
+      </button>
+      <button id="theme-toggle" class="btn-control" aria-label="Toggle dark and light theme" title="Toggle visual theme (Dark HUD / Light Lab)">
+        <span id="theme-icon">&#9681;</span>
+        <span id="theme-text" class="control-label">Dark</span>
+      </button>
+      <button id="fullscreen-btn" class="btn-control" aria-label="Toggle fullscreen mode" title="Toggle fullscreen view">
+        <span class="control-icon">&#x26F6;</span>
+        <span id="fullscreen-text" class="control-label">Full</span>
+      </button>
+    </div>
+
+    <div class="topbar-divider" aria-hidden="true"></div>
+
+    <div class="topbar-nav-group" role="group" aria-label="Project Deliverables">
+      <a href="presentation.html" class="btn-deliverable btn-deck" target="_blank" rel="noopener" title="Open companion oral defense slide deck">
+        <span>Defense Deck</span>
+        <span class="ext-symbol">&#x2197;</span>
+      </a>
+      <a href="#submission-declaration" class="btn-deliverable btn-declaration" title="Jump to Course AI Use Declaration">
+        <span>AI Declaration</span>
+      </a>
+    </div>
   </div>
 </header>
 
@@ -96,6 +117,16 @@
   <div class="app-container">
     
 <nav class="sidebar" id="sidebar" aria-label="Manual Table of Contents">
+  <div class="sidebar-header-bar">
+    <div class="sidebar-header-title">
+      <span style="color: var(--accent-amber-bright); font-weight: bold;">FMS</span>
+      <span>// REBOOT DIRECTORY</span>
+    </div>
+    <button id="sidebar-close-btn" class="sidebar-close-btn" aria-label="Collapse sidebar navigation (Hotkey: [ )" title="Collapse sidebar (Hotkey: [ )">
+      <span>&#x2715;</span>
+    </button>
+  </div>
+
   <div class="sidebar-progress-card">
     <div class="progress-header">
       <span>REBOOT SEQUENCE</span>
